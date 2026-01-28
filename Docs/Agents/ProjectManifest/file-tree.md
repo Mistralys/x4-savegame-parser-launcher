@@ -8,6 +8,8 @@
 │       ├── ImplementationArchive/
 │       │   ├── 1-initial-implementation-plan.md
 │       │   ├── 2-application-concept.md
+│       │   ├── 3-initial-work-packages.md
+│       │   ├── 4-config-editing.md
 │       │   └── README.md
 │       └── ProjectManifest/
 │           ├── README.md

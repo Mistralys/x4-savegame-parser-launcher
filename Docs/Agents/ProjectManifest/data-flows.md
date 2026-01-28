@@ -17,7 +17,9 @@
 ## Configuration Persistence
 1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
 2. **Updating:** `updateConfig` updates the React state and immediately saves to the persistent store.
-3. **Auto-Detection:** On first run (or if set to 'auto'), system language is detected and applied.
+3. **Tool Sync:** Changes to tool-relevant settings automatically trigger `save_tool_config` to update the tool's `config.json`.
+4. **Manual Import:** Users can manually trigger `load_tool_config` via the UI to import settings from an existing `config.json`.
+5. **Auto-Detection:** On first run (or if set to 'auto'), system language is detected and applied.
 
 ## Environment Validation
 1. **Trigger:** Validation runs on mount and every 5 seconds (periodic check).
