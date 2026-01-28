@@ -1,40 +1,68 @@
 import React from 'react';
-import { Window } from '@tauri-apps/api/window';
-import { X, Minus, Square } from 'lucide-react';
-
-const appWindow = new Window('main');
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { X, Minus, Square, Copy } from 'lucide-react';
 
 export const WindowControls: React.FC = () => {
-  const handleMinimize = () => appWindow.minimize();
-  const handleMaximize = async () => {
-    const isMaximized = await appWindow.isMaximized();
-    if (isMaximized) {
-      appWindow.unmaximize();
+  const [isMaximized, setIsMaximized] = React.useState(false);
+
+  React.useEffect(() => {
+    const win = getCurrentWindow();
+    const updateStatus = async () => {
+      setIsMaximized(await win.isMaximized());
+    };
+    
+    updateStatus();
+    const unlisten = win.onResized(updateStatus);
+    return () => {
+      unlisten.then(f => f());
+    };
+  }, []);
+
+  const handleMinimize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    getCurrentWindow().minimize();
+  };
+
+  const handleMaximize = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const win = getCurrentWindow();
+    if (await win.isMaximized()) {
+      await win.unmaximize();
     } else {
-      appWindow.maximize();
+      await win.maximize();
     }
   };
-  const handleClose = () => appWindow.close();
+
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    getCurrentWindow().close();
+  };
 
   return (
-    <div className="flex items-center no-drag">
+    <div className="flex items-center no-drag h-full">
       <button
         onClick={handleMinimize}
-        className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+        className="h-12 w-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+        title="Minimize"
       >
-        <Minus size={14} />
+        <Minus size={16} />
       </button>
       <button
         onClick={handleMaximize}
-        className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+        className="h-12 w-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+        title={isMaximized ? "Restore" : "Maximize"}
       >
-        <Square size={12} />
+        {isMaximized ? <Copy size={14} className="rotate-180" /> : <Square size={14} />}
       </button>
       <button
         onClick={handleClose}
-        className="p-3 hover:bg-red-500 hover:text-white transition-colors text-gray-500"
+        className="h-12 w-12 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-500"
+        title="Close"
       >
-        <X size={14} />
+        <X size={18} />
       </button>
     </div>
   );

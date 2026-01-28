@@ -52,18 +52,19 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 border border-gray-200 dark:border-gray-800 rounded-lg shadow-2xl">
+    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-md">
-        <div 
-          data-tauri-drag-region 
-          className="h-12 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 cursor-default select-none"
+      <aside className="w-64 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-md relative z-20">
+        <div
+          className="h-12 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 cursor-default select-none shrink-0 drag-region"
         >
-          <Command className="mr-2 text-blue-500" size={20} />
-          <span className="font-bold text-sm tracking-tight">{t('app.title')}</span>
+          <div className="flex items-center no-drag">
+            <Command className="mr-2 text-blue-500" size={20} />
+            <span className="font-bold text-sm tracking-tight">{t('app.title')}</span>
+          </div>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 no-drag">
           <NavItem 
             icon={<Home size={18} />} 
             label={t('nav.home')} 
@@ -90,29 +91,30 @@ function App() {
           />
         </nav>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 no-drag">
           <ThemeToggle />
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <ErrorBanner />
-        {/* Custom Titlebar / Topbar */}
-        <header 
-          data-tauri-drag-region 
-          className="h-12 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 bg-white/50 dark:bg-gray-950/50 backdrop-blur-md"
-        >
-          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+        
+        {/* Header / Title Bar */}
+        <header className="h-12 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-white/50 dark:bg-gray-950/50 backdrop-blur-md shrink-0 cursor-default drag-region">
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium ml-6 no-drag pointer-events-none select-none">
             {t('app.status')}: <span className="text-green-500">{t('app.ready')}</span>
           </div>
-          <div className="flex items-center">
-            <Info size={16} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer mr-2" />
+          
+          <div className="flex items-center no-drag h-full">
+            <div className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer h-full flex items-center">
+              <Info size={18} />
+            </div>
             <WindowControls />
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-8 no-drag">
           <div className="max-w-3xl mx-auto space-y-8">
             {activeTab === "home" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">

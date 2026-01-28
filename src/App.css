@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* 1. Global Frameless Configuration */
+:root {
+  --titlebar-height: 3rem;
+}
+
+/* Base resets for frameless transparency */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* 2. Dragging Logic */
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* 3. Utility variants */
 @theme {
   --font-sans: "Inter", "Avenir", "Helvetica", "Arial", sans-serif;
 }
