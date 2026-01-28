@@ -109,7 +109,17 @@ function App() {
           </div>
           
           <div className="flex items-center h-full relative z-10">
-            <div className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer h-full flex items-center">
+            <div
+              onClick={async () => {
+                const { message } = await import('@tauri-apps/plugin-dialog');
+                await message(
+                  `X4 Savegame Parser & Launcher v0.1.0\n\nOS: ${systemInfo?.os}\nArch: ${systemInfo?.arch}\n\nBuilt with Tauri & React`,
+                  { title: 'About', kind: 'info' }
+                );
+              }}
+              className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer h-full flex items-center"
+              title="About"
+            >
               <Info size={18} />
             </div>
             <WindowControls />
