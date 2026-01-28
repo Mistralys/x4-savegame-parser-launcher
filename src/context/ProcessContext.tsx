@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
-import { useConfig } from './ConfigContext';
+import { useConfig, getToolPaths } from './ConfigContext';
 import { logger } from '../services/logger';
 
 export type ToolStatus = 'running' | 'stopped' | 'starting' | 'stopping';
@@ -75,7 +75,8 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     try {
       const phpPath = config.phpPath;
-      const scriptPath = tool === 'parser' ? config.parserToolPath : config.viewerToolPath;
+      const toolPaths = getToolPaths(config.installPath);
+      const scriptPath = tool === 'parser' ? toolPaths.parser : toolPaths.viewer;
       
       await invoke('start_tool', { tool, phpPath, scriptPath });
       setTools(prev => ({ ...prev, [tool]: { ...prev[tool], status: 'running' } }));

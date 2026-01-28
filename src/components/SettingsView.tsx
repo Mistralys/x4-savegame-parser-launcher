@@ -65,22 +65,12 @@ export const SettingsView: React.FC = () => {
           </h3>
 
           <PathInput
-            label={t('settings.php_path')}
-            value={config.phpPath}
-            error={validation.errors.phpPath}
+            label={t('settings.install_path')}
+            value={config.installPath}
+            error={validation.errors.installPath}
             errorText={t('errors.path_invalid')}
-            onPick={() => pickFile('phpPath', ['exe'])}
-            onChange={(val) => updateConfig({ phpPath: val })}
-            icon={<Terminal size={16} />}
-          />
-
-          <PathInput
-            label={t('settings.game_path')}
-            value={config.gameFolderPath}
-            error={validation.errors.gameFolderPath}
-            errorText={t('errors.path_invalid')}
-            onPick={() => pickFolder('gameFolderPath')}
-            onChange={(val) => updateConfig({ gameFolderPath: val })}
+            onPick={() => pickFolder('installPath')}
+            onChange={(val) => updateConfig({ installPath: val })}
             icon={<FolderOpen size={16} />}
           />
 
@@ -95,23 +85,23 @@ export const SettingsView: React.FC = () => {
           />
 
           <PathInput
-            label={t('settings.parser_path')}
-            value={config.parserToolPath}
-            error={validation.errors.parserToolPath}
+            label={t('settings.game_path')}
+            value={config.gameFolderPath}
+            error={validation.errors.gameFolderPath}
             errorText={t('errors.path_invalid')}
-            onPick={() => pickFile('parserToolPath', ['php'])}
-            onChange={(val) => updateConfig({ parserToolPath: val })}
-            icon={<FileCode size={16} />}
+            onPick={() => pickFolder('gameFolderPath')}
+            onChange={(val) => updateConfig({ gameFolderPath: val })}
+            icon={<FolderOpen size={16} />}
           />
 
           <PathInput
-            label={t('settings.viewer_path')}
-            value={config.viewerToolPath}
-            error={validation.errors.viewerToolPath}
+            label={t('settings.php_path')}
+            value={config.phpPath}
+            error={validation.errors.phpPath}
             errorText={t('errors.path_invalid')}
-            onPick={() => pickFile('viewerToolPath', ['php'])}
-            onChange={(val) => updateConfig({ viewerToolPath: val })}
-            icon={<FileCode size={16} />}
+            onPick={() => pickFile('phpPath', ['exe'])}
+            onChange={(val) => updateConfig({ phpPath: val })}
+            icon={<Terminal size={16} />}
           />
         </div>
 
@@ -166,7 +156,7 @@ export const SettingsView: React.FC = () => {
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400">
-                {t('settings.viewer_port')}
+                {t('settings.viewer_port')} <span className="text-blue-500/70 font-normal">(Default: 9494)</span>
               </label>
               <input
                 type="number"

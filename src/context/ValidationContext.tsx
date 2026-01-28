@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { exists } from '@tauri-apps/plugin-fs';
 import { Command } from '@tauri-apps/plugin-shell';
-import { useConfig } from './ConfigContext';
+import { useConfig, getToolPaths } from './ConfigContext';
 import { logger } from '../services/logger';
 
 interface ValidationResult {
@@ -10,6 +10,7 @@ interface ValidationResult {
     phpPath?: boolean;
     gameFolderPath?: boolean;
     savegameFolderPath?: boolean;
+    installPath?: boolean;
     parserToolPath?: boolean;
     viewerToolPath?: boolean;
   };
@@ -73,26 +74,28 @@ export const ValidationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         isValid = false;
       }
 
-      // 3. Validate Scripts
-      if (config.parserToolPath) {
-        const parserExists = await exists(config.parserToolPath);
-        if (!parserExists) {
-          errors.parserToolPath = true;
+      // 3. Validate Installation Path and derived scripts
+      if (config.installPath) {
+        const installExists = await exists(config.installPath);
+        if (!installExists) {
+          errors.installPath = true;
           isValid = false;
-        }
-      } else {
-        errors.parserToolPath = true;
-        isValid = false;
-      }
+        } else {
+          const { parser, viewer } = getToolPaths(config.installPath);
+          const parserExists = await exists(parser);
+          const viewerExists = await exists(viewer);
 
-      if (config.viewerToolPath) {
-        const viewerExists = await exists(config.viewerToolPath);
-        if (!viewerExists) {
-          errors.viewerToolPath = true;
-          isValid = false;
+          if (!parserExists) {
+            errors.parserToolPath = true;
+            isValid = false;
+          }
+          if (!viewerExists) {
+            errors.viewerToolPath = true;
+            isValid = false;
+          }
         }
       } else {
-        errors.viewerToolPath = true;
+        errors.installPath = true;
         isValid = false;
       }
 

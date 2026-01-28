@@ -6,8 +6,7 @@ export interface AppConfig {
   phpPath: string;
   gameFolderPath: string;
   savegameFolderPath: string;
-  parserToolPath: string;
-  viewerToolPath: string;
+  installPath: string;
   viewerHost: string;
   viewerPort: number;
   language: Language | 'auto';
@@ -20,8 +19,7 @@ const DEFAULT_CONFIG: AppConfig = {
   phpPath: 'php',
   gameFolderPath: '',
   savegameFolderPath: '',
-  parserToolPath: '',
-  viewerToolPath: '',
+  installPath: '',
   viewerHost: DEFAULT_VIEWER_HOST,
   viewerPort: DEFAULT_VIEWER_PORT,
   language: 'auto',
@@ -107,6 +105,14 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       {children}
     </ConfigContext.Provider>
   );
+};
+
+export const getToolPaths = (installPath: string) => {
+  const normalizedPath = installPath.replace(/\\/g, '/').replace(/\/$/, '');
+  return {
+    viewer: normalizedPath ? `${normalizedPath}/bin/php/run-ui.php` : '',
+    parser: normalizedPath ? `${normalizedPath}/bin/php/run-monitor.php` : '',
+  };
 };
 
 export const useConfig = () => {
