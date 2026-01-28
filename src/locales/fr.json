@@ -36,6 +36,7 @@
     "title": "Erreur",
     "invalid_config": "Configuration invalide",
     "fix_settings": "Veuillez vérifier vos paramètres. Certains chemins sont invalides ou manquants.",
-    "modal_message": "Cet outil est désactivé car votre configuration est invalide. Veuillez vérifier la bannière d'erreur pour plus de détails."
+    "modal_message": "Cet outil est désactivé car votre configuration est invalide. Veuillez vérifier la bannière d'erreur pour plus de détails.",
+    "path_invalid": "Chemin invalide ou accès refusé"
   }
 }

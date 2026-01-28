@@ -9,6 +9,7 @@ import { useValidation } from "./context/ValidationContext";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { SettingsView } from "./components/SettingsView";
 import { ToolView } from "./components/ToolView";
+import { WindowControls } from "./components/WindowControls";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import "./App.css";
@@ -51,7 +52,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 border border-gray-200 dark:border-gray-800 rounded-lg shadow-2xl">
       {/* Sidebar */}
       <aside className="w-64 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-md">
         <div 
@@ -105,8 +106,9 @@ function App() {
           <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
             {t('app.status')}: <span className="text-green-500">{t('app.ready')}</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Info size={16} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer" />
+          <div className="flex items-center">
+            <Info size={16} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer mr-2" />
+            <WindowControls />
           </div>
         </header>
 

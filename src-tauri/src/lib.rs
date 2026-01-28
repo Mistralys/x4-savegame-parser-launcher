@@ -2,7 +2,6 @@ mod process;
 
 use std::fs::{File, OpenOptions};
 use std::io::Write;
-use std::os::windows::process::CommandExt;
 use tauri::{AppHandle, Manager, State};
 use crate::process::ProcessManager;
 
@@ -74,6 +73,22 @@ async fn is_tool_running(manager: State<'_, ProcessManager>, tool: String) -> Re
     Ok(manager.is_running(&tool))
 }
 
+#[tauri::command]
+async fn open_log_dir(app: AppHandle) -> Result<(), String> {
+    let log_path = app.path().app_log_dir().map_err(|e| e.to_string())?;
+    std::fs::create_dir_all(&log_path).map_err(|e| e.to_string())?;
+    
+    #[cfg(windows)]
+    {
+        std::process::Command::new("explorer")
+            .arg(log_path)
+            .spawn()
+            .map_err(|e| e.to_string())?;
+    }
+    
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -90,7 +105,8 @@ pub fn run() {
             clear_log_file,
             start_tool,
             stop_tool,
-            is_tool_running
+            is_tool_running,
+            open_log_dir
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?

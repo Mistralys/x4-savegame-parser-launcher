@@ -36,6 +36,7 @@
     "title": "Fehler",
     "invalid_config": "Ungültige Konfiguration",
     "fix_settings": "Bitte überprüfen Sie Ihre Einstellungen. Einige Pfade sind ungültig oder fehlen.",
-    "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details."
+    "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details.",
+    "path_invalid": "Ungültiger Pfad oder Zugriff verweigert"
   }
 }

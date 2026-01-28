@@ -36,6 +36,7 @@
     "title": "Error",
     "invalid_config": "Invalid Configuration",
     "fix_settings": "Please review your settings. Some paths are invalid or missing.",
-    "modal_message": "This tool is disabled because your configuration is invalid. Please check the error banner for details."
+    "modal_message": "This tool is disabled because your configuration is invalid. Please check the error banner for details.",
+    "path_invalid": "Invalid path or permission denied"
   }
 }

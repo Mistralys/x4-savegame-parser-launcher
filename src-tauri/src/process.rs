@@ -1,9 +1,12 @@
 use std::collections::HashMap;
 use std::process::Stdio;
 use std::sync::{Arc, Mutex};
-use tauri::{AppHandle, Emitter, Manager, Runtime};
+use tauri::{AppHandle, Emitter, Runtime};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::{Child, Command};
+
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
 
 #[derive(Clone, serde::Serialize)]
 struct ProcessOutput {
@@ -42,11 +45,15 @@ impl ProcessManager {
         command
             .arg(script_path)
             .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            // On Windows, prevent terminal window from popping up
-            .creation_flags(0x08000000); // CREATE_NO_WINDOW
+            .stderr(Stdio::piped());
 
-        let mut child = command.spawn().map_err(|e| e.to_string())?;
+        #[cfg(windows)]
+        {
+            const CREATE_NO_WINDOW: u32 = 0x08000000;
+            command.creation_flags(CREATE_NO_WINDOW);
+        }
+
+        let mut child = command.spawn().map_err(|e: std::io::Error| e.to_string())?;
 
         let stdout = child.stdout.take().unwrap();
         let stderr = child.stderr.take().unwrap();

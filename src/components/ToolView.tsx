@@ -75,7 +75,7 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
           </button>
           <button
             onClick={handleToggle}
-            disabled={isTransitioning}
+            disabled={isTransitioning || (!isRunning && !validation.isValid)}
             className={`flex items-center gap-2 px-6 py-2 rounded-xl font-bold text-sm transition-all ${
               isRunning 
                 ? 'bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white' 

@@ -39,18 +39,15 @@ export const ValidationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     try {
       // 1. Validate PHP Path
-      // We try to run `php -v` to see if it's working
-      try {
-        const cmd = Command.create(config.phpPath, ['-v']);
-        const output = await cmd.execute();
-        if (output.code !== 0) {
+      if (config.phpPath) {
+        const phpExists = await exists(config.phpPath);
+        if (!phpExists && config.phpPath !== 'php') {
           errors.phpPath = true;
           isValid = false;
         }
-      } catch (e) {
+      } else {
         errors.phpPath = true;
         isValid = false;
-        logger.log('warn', `PHP validation failed for path: ${config.phpPath}`, e);
       }
 
       // 2. Validate Folders

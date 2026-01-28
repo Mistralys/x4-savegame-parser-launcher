@@ -3,7 +3,8 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useConfig, AppConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
-import { FolderOpen, FileCode, Terminal, Globe, Languages } from 'lucide-react';
+import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download } from 'lucide-react';
+import { logger } from '../services/logger';
 
 export const SettingsView: React.FC = () => {
   const { config, updateConfig } = useConfig();
@@ -67,6 +68,7 @@ export const SettingsView: React.FC = () => {
             label={t('settings.php_path')}
             value={config.phpPath}
             error={validation.errors.phpPath}
+            errorText={t('errors.path_invalid')}
             onPick={() => pickFile('phpPath', ['exe'])}
             onChange={(val) => updateConfig({ phpPath: val })}
             icon={<Terminal size={16} />}
@@ -76,6 +78,7 @@ export const SettingsView: React.FC = () => {
             label={t('settings.game_path')}
             value={config.gameFolderPath}
             error={validation.errors.gameFolderPath}
+            errorText={t('errors.path_invalid')}
             onPick={() => pickFolder('gameFolderPath')}
             onChange={(val) => updateConfig({ gameFolderPath: val })}
             icon={<FolderOpen size={16} />}
@@ -85,6 +88,7 @@ export const SettingsView: React.FC = () => {
             label={t('settings.save_path')}
             value={config.savegameFolderPath}
             error={validation.errors.savegameFolderPath}
+            errorText={t('errors.path_invalid')}
             onPick={() => pickFolder('savegameFolderPath')}
             onChange={(val) => updateConfig({ savegameFolderPath: val })}
             icon={<FolderOpen size={16} />}
@@ -94,6 +98,7 @@ export const SettingsView: React.FC = () => {
             label={t('settings.parser_path')}
             value={config.parserToolPath}
             error={validation.errors.parserToolPath}
+            errorText={t('errors.path_invalid')}
             onPick={() => pickFile('parserToolPath', ['php'])}
             onChange={(val) => updateConfig({ parserToolPath: val })}
             icon={<FileCode size={16} />}
@@ -103,10 +108,42 @@ export const SettingsView: React.FC = () => {
             label={t('settings.viewer_path')}
             value={config.viewerToolPath}
             error={validation.errors.viewerToolPath}
+            errorText={t('errors.path_invalid')}
             onPick={() => pickFile('viewerToolPath', ['php'])}
             onChange={(val) => updateConfig({ viewerToolPath: val })}
             icon={<FileCode size={16} />}
           />
+        </div>
+
+        {/* Debugging */}
+        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+          <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
+            <Activity className="mr-2 text-blue-500" size={18} />
+            Debugging
+          </label>
+          <button
+            onClick={async () => {
+              try {
+                const { invoke } = await import('@tauri-apps/api/core');
+                await invoke('open_log_dir');
+              } catch (e) {
+                // Fallback to download if command fails
+                const log = logger.getSessionLog();
+                const blob = new Blob([log], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'x4-launcher-debug.log';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              }
+            }}
+            className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-100 dark:hover:bg-gray-900 transition-all flex items-center justify-center gap-2"
+          >
+            <Download size={16} />
+            {t('settings.view_debug_log')}
+          </button>
         </div>
 
         {/* Web Settings */}
@@ -131,12 +168,13 @@ interface PathInputProps {
   label: string;
   value: string;
   error?: boolean;
+  errorText?: string;
   onPick: () => void;
   onChange: (val: string) => void;
   icon: React.ReactNode;
 }
 
-const PathInput: React.FC<PathInputProps> = ({ label, value, error, onPick, onChange, icon }) => (
+const PathInput: React.FC<PathInputProps> = ({ label, value, error, errorText, onPick, onChange, icon }) => (
   <div className="space-y-2">
     <label className="text-xs font-bold text-gray-500 dark:text-gray-400 flex items-center">
       <span className="mr-2">{icon}</span>
@@ -160,7 +198,7 @@ const PathInput: React.FC<PathInputProps> = ({ label, value, error, onPick, onCh
     </div>
     {error && (
       <p className="text-[10px] text-red-500 font-medium animate-in fade-in slide-in-from-top-1">
-        Invalid path or permission denied
+        {errorText || 'Invalid path'}
       </p>
     )}
   </div>

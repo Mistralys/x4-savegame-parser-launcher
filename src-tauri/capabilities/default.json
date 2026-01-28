@@ -5,6 +5,12 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",
+    "store:default",
+    "fs:default",
+    "dialog:default",
+    "shell:default",
+    "process:default",
+    "opener:allow-open-url"
   ]
 }
