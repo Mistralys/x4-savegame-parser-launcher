@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { ThemeToggle } from "./components/ThemeToggle";
-import { Layout, Home, Settings, Info, Command, AlertCircle } from "lucide-react";
+import { Layout, Home, Settings, Info, Command, AlertCircle, Activity } from "lucide-react";
 import { useI18n } from "./context/I18nContext";
 import { useConfig } from "./context/ConfigContext";
 import { useError } from "./context/ErrorContext";
 import { useValidation } from "./context/ValidationContext";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { SettingsView } from "./components/SettingsView";
+import { ToolView } from "./components/ToolView";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import "./App.css";
@@ -68,11 +69,17 @@ function App() {
             active={activeTab === "home"} 
             onClick={() => setActiveTab("home")} 
           />
-          <NavItem 
-            icon={<Layout size={18} />} 
-            label={t('nav.parser')} 
-            active={activeTab === "parser"} 
-            onClick={() => setActiveTab("parser")} 
+          <NavItem
+            icon={<Layout size={18} />}
+            label={t('nav.parser')}
+            active={activeTab === "parser"}
+            onClick={() => setActiveTab("parser")}
+          />
+          <NavItem
+            icon={<Activity size={18} />}
+            label={t('nav.viewer')}
+            active={activeTab === "viewer"}
+            onClick={() => setActiveTab("viewer")}
           />
           <NavItem 
             icon={<Settings size={18} />} 
@@ -133,14 +140,17 @@ function App() {
               </section>
             )}
 
-            {(activeTab === "parser" || activeTab === "viewer") && (
+            {activeTab === "parser" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-2">
-                  {activeTab === "parser" ? t('nav.parser') : t('nav.viewer')}
-                </h1>
-                <div className="p-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl flex items-center justify-center text-gray-400">
-                  Tool UI placeholder (WP 4)
-                </div>
+                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('nav.parser')}</h1>
+                <ToolView tool="parser" />
+              </section>
+            )}
+
+            {activeTab === "viewer" && (
+              <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('nav.viewer')}</h1>
+                <ToolView tool="viewer" />
               </section>
             )}
           </div>
