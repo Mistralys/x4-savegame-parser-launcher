@@ -5,6 +5,9 @@ import { Layout, Home, Settings, Info, Command, AlertCircle } from "lucide-react
 import { useI18n } from "./context/I18nContext";
 import { useConfig } from "./context/ConfigContext";
 import { useError } from "./context/ErrorContext";
+import { useValidation } from "./context/ValidationContext";
+import { ErrorBanner } from "./components/ErrorBanner";
+import { SettingsView } from "./components/SettingsView";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import "./App.css";
@@ -86,6 +89,7 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <ErrorBanner />
         {/* Custom Titlebar / Topbar */}
         <header 
           data-tauri-drag-region 
@@ -124,11 +128,8 @@ function App() {
 
             {activeTab === "settings" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-2">{t('settings.title')}</h1>
-                <p className="text-sm text-gray-500 mb-8">Localization and Infrastructure ready.</p>
-                <div className="p-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl flex items-center justify-center text-gray-400">
-                  Settings UI placeholder (WP 2)
-                </div>
+                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('settings.title')}</h1>
+                <SettingsView />
               </section>
             )}
 
