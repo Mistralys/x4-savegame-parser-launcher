@@ -14,13 +14,7 @@ html, body, #root {
 }
 
 /* 2. Dragging Logic */
-.drag-region {
-  -webkit-app-region: drag;
-}
-
-.no-drag {
-  -webkit-app-region: no-drag;
-}
+/* Note: Tauri uses data-tauri-drag-region attribute instead of CSS */
 
 /* 3. Utility variants */
 @theme {

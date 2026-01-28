@@ -42,7 +42,7 @@ export const WindowControls: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center no-drag h-full">
+    <div className="flex items-center h-full">
       <button
         onClick={handleMinimize}
         className="h-12 w-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"

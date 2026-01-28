@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "X4 Savegame Parser & Launcher",
         "width": 1000,
         "height": 700,

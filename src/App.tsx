@@ -56,15 +56,16 @@ function App() {
       {/* Sidebar */}
       <aside className="w-64 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-md relative z-20">
         <div
-          className="h-12 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 cursor-default select-none shrink-0 drag-region"
+          className="h-12 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 cursor-default select-none shrink-0 relative"
         >
-          <div className="flex items-center no-drag">
+          <div className="absolute inset-0" data-tauri-drag-region />
+          <div className="flex items-center relative z-10 pointer-events-none">
             <Command className="mr-2 text-blue-500" size={20} />
             <span className="font-bold text-sm tracking-tight">{t('app.title')}</span>
           </div>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2 no-drag">
+        <nav className="flex-1 p-4 space-y-2">
           <NavItem 
             icon={<Home size={18} />} 
             label={t('nav.home')} 
@@ -91,7 +92,7 @@ function App() {
           />
         </nav>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800 no-drag">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
           <ThemeToggle />
         </div>
       </aside>
@@ -101,12 +102,13 @@ function App() {
         <ErrorBanner />
         
         {/* Header / Title Bar */}
-        <header className="h-12 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-white/50 dark:bg-gray-950/50 backdrop-blur-md shrink-0 cursor-default drag-region">
-          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium ml-6 no-drag pointer-events-none select-none">
+        <header className="h-12 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-white/50 dark:bg-gray-950/50 backdrop-blur-md shrink-0 cursor-default relative">
+          <div className="absolute inset-0" data-tauri-drag-region />
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium ml-6 pointer-events-none select-none relative z-10">
             {t('app.status')}: <span className="text-green-500">{t('app.ready')}</span>
           </div>
           
-          <div className="flex items-center no-drag h-full">
+          <div className="flex items-center h-full relative z-10">
             <div className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer h-full flex items-center">
               <Info size={18} />
             </div>
@@ -114,7 +116,7 @@ function App() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8 no-drag">
+        <div className="flex-1 overflow-y-auto p-8">
           <div className="max-w-3xl mx-auto space-y-8">
             {activeTab === "home" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
