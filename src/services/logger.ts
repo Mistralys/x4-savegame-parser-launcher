@@ -19,21 +19,35 @@ class Logger {
 
   public async log(level: LogLevel, message: string, details?: any) {
     const timestamp = new Date().toISOString();
-    const logEntry = `[${timestamp}] [${level.toUpperCase()}] ${message}${details ? ' | ' + JSON.stringify(details) : ''}`;
+    const formattedMessage = details ? `${message} | ${JSON.stringify(details)}` : message;
+    const logEntry = `[${timestamp}] [${level.toUpperCase()}] ${formattedMessage}`;
     
-    // In-memory session log
+    // In-memory session log (for the UI if needed)
     this.sessionLog.push(logEntry);
     
     // Console output
     const consoleMethod = level === 'debug' ? 'log' : level;
     console[consoleMethod](logEntry);
 
-    // TODO: Write to actual debug file via Rust command in WP 3
-    // For now, we'll keep it in memory and can expose it via a frontend command
+    // Call Rust to log to file
+    try {
+      await invoke('log_to_file', { level, message: formattedMessage });
+    } catch (e) {
+      console.error('Failed to write to log file', e);
+    }
   }
 
   public getSessionLog(): string {
     return this.sessionLog.join('\n');
+  }
+
+  public async clearLog() {
+    this.sessionLog = [];
+    try {
+      await invoke('clear_log_file');
+    } catch (e) {
+      console.error('Failed to clear log file', e);
+    }
   }
 }
 
