@@ -1,0 +1,41 @@
+{
+  "language_name": "Deutsch",
+  "app": {
+    "title": "X4 Launcher",
+    "status": "Status",
+    "ready": "Bereit",
+    "loading": "Ladevorgang..."
+  },
+  "nav": {
+    "home": "Startseite",
+    "parser": "Parser",
+    "viewer": "Viewer",
+    "settings": "Einstellungen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "php_path": "PHP-Pfad",
+    "game_path": "X4-Spielverzeichnis",
+    "save_path": "Savegame-Verzeichnis",
+    "parser_path": "Parser-Skriptpfad",
+    "viewer_path": "Viewer-Skriptpfad",
+    "viewer_url": "Viewer-URL",
+    "language": "Sprache",
+    "save_button": "Konfiguration speichern",
+    "view_debug_log": "Debug-Log anzeigen"
+  },
+  "tools": {
+    "start": "Starten",
+    "stop": "Stoppen",
+    "running": "Läuft",
+    "stopped": "Angehalten",
+    "open_browser": "Browser öffnen",
+    "clear_logs": "Logs löschen"
+  },
+  "errors": {
+    "title": "Fehler",
+    "invalid_config": "Ungültige Konfiguration",
+    "fix_settings": "Bitte überprüfen Sie Ihre Einstellungen. Einige Pfade sind ungültig oder fehlen.",
+    "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details."
+  }
+}

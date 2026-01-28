@@ -1,0 +1,41 @@
+{
+  "language_name": "English",
+  "app": {
+    "title": "X4 Launcher",
+    "status": "Status",
+    "ready": "Ready",
+    "loading": "Loading..."
+  },
+  "nav": {
+    "home": "Home",
+    "parser": "Parser",
+    "viewer": "Viewer",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "php_path": "PHP Executable Path",
+    "game_path": "X4 Game Folder",
+    "save_path": "Savegame Folder",
+    "parser_path": "Parser Script Path",
+    "viewer_path": "Viewer Script Path",
+    "viewer_url": "Viewer URL",
+    "language": "Language",
+    "save_button": "Save Configuration",
+    "view_debug_log": "View Debug Log"
+  },
+  "tools": {
+    "start": "Start",
+    "stop": "Stop",
+    "running": "Running",
+    "stopped": "Stopped",
+    "open_browser": "Open Browser",
+    "clear_logs": "Clear Logs"
+  },
+  "errors": {
+    "title": "Error",
+    "invalid_config": "Invalid Configuration",
+    "fix_settings": "Please review your settings. Some paths are invalid or missing.",
+    "modal_message": "This tool is disabled because your configuration is invalid. Please check the error banner for details."
+  }
+}

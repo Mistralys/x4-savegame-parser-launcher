@@ -1,0 +1,41 @@
+{
+  "language_name": "Français",
+  "app": {
+    "title": "X4 Launcher",
+    "status": "Statut",
+    "ready": "Prêt",
+    "loading": "Chargement..."
+  },
+  "nav": {
+    "home": "Accueil",
+    "parser": "Analyseur",
+    "viewer": "Visualiseur",
+    "settings": "Paramètres"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "php_path": "Chemin de l'exécutable PHP",
+    "game_path": "Dossier du jeu X4",
+    "save_path": "Dossier des sauvegardes",
+    "parser_path": "Chemin du script d'analyse",
+    "viewer_path": "Chemin du script de visualisation",
+    "viewer_url": "URL du visualiseur",
+    "language": "Langue",
+    "save_button": "Enregistrer la configuration",
+    "view_debug_log": "Voir le journal de débogage"
+  },
+  "tools": {
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "running": "En cours",
+    "stopped": "Arrêté",
+    "open_browser": "Ouvrir le navigateur",
+    "clear_logs": "Effacer les journaux"
+  },
+  "errors": {
+    "title": "Erreur",
+    "invalid_config": "Configuration invalide",
+    "fix_settings": "Veuillez vérifier vos paramètres. Certains chemins sont invalides ou manquants.",
+    "modal_message": "Cet outil est désactivé car votre configuration est invalide. Veuillez vérifier la bannière d'erreur pour plus de détails."
+  }
+}
