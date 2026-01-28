@@ -1,6 +1,7 @@
 mod process;
 
 use std::fs::{File, OpenOptions};
+use std::path::PathBuf;
 use std::io::Write;
 use tauri::{AppHandle, Manager, State};
 use crate::process::ProcessManager;
@@ -9,6 +10,18 @@ use crate::process::ProcessManager;
 struct SystemInfo {
     os: String,
     arch: String,
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ToolConfig {
+    game_folder: String,
+    storage_folder: String,
+    viewer_host: String,
+    viewer_port: u16,
+    auto_backup_enabled: bool,
+    keep_xml_files: bool,
+    logging_enabled: bool,
 }
 
 #[tauri::command]
@@ -89,6 +102,25 @@ async fn open_log_dir(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+async fn save_tool_config(config: ToolConfig, install_path: String) -> Result<(), String> {
+    let path = std::path::Path::new(&install_path).join("config.json");
+    let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
+    std::fs::write(path, content).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+async fn load_tool_config(install_path: String) -> Result<ToolConfig, String> {
+    let path = std::path::Path::new(&install_path).join("config.json");
+    if !path.exists() {
+        return Err("Config file not found".to_string());
+    }
+    let content = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let config: ToolConfig = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+    Ok(config)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -106,7 +138,9 @@ pub fn run() {
             start_tool,
             stop_tool,
             is_tool_running,
-            open_log_dir
+            open_log_dir,
+            save_tool_config,
+            load_tool_config
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?

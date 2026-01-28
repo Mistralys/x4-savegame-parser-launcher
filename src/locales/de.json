@@ -22,7 +22,13 @@
     "viewer_port": "Viewer-Port",
     "language": "Sprache",
     "save_button": "Konfiguration speichern",
-    "view_debug_log": "Debug-Log anzeigen"
+    "view_debug_log": "Debug-Log anzeigen",
+    "tool_settings_title": "Savegame Parser Tool-Einstellungen",
+    "storage_folder": "Speicherordner (Relativ zum Spielpfad)",
+    "auto_backup": "Auto-Backup aktiviert",
+    "keep_xml": "XML-Dateien behalten",
+    "tool_logging": "Tool-Logging aktivieren",
+    "load_from_config": "Aus config.json laden"
   },
   "tools": {
     "start": "Starten",
@@ -37,6 +43,7 @@
     "invalid_config": "Ungültige Konfiguration",
     "fix_settings": "Bitte überprüfen Sie Ihre Einstellungen. Einige Pfade sind ungültig oder fehlen.",
     "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details.",
-    "path_invalid": "Ungültiger Pfad oder Zugriff verweigert"
+    "path_invalid": "Ungültiger Pfad oder Zugriff verweigert",
+    "config_write_failed": "Tool-config.json konnte nicht aktualisiert werden. Bitte Berechtigungen prüfen."
   }
 }

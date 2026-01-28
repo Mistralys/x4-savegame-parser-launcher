@@ -22,7 +22,13 @@
     "viewer_port": "Port du visualiseur",
     "language": "Langue",
     "save_button": "Enregistrer la configuration",
-    "view_debug_log": "Voir le journal de débogage"
+    "view_debug_log": "Voir le journal de débogage",
+    "tool_settings_title": "Paramètres de l'outil Savegame Parser",
+    "storage_folder": "Dossier de stockage (Relatif au chemin du jeu)",
+    "auto_backup": "Sauvegarde automatique activée",
+    "keep_xml": "Conserver les fichiers XML",
+    "tool_logging": "Activer les journaux de l'outil",
+    "load_from_config": "Charger depuis config.json"
   },
   "tools": {
     "start": "Démarrer",
@@ -37,6 +43,7 @@
     "invalid_config": "Configuration invalide",
     "fix_settings": "Veuillez vérifier vos paramètres. Certains chemins sont invalides ou manquants.",
     "modal_message": "Cet outil est désactivé car votre configuration est invalide. Veuillez vérifier la bannière d'erreur pour plus de détails.",
-    "path_invalid": "Chemin invalide ou accès refusé"
+    "path_invalid": "Chemin invalide ou accès refusé",
+    "config_write_failed": "Échec de la mise à jour du fichier config.json de l'outil. Veuillez vérifier les permissions."
   }
 }

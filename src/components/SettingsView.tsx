@@ -3,13 +3,14 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useConfig, AppConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
-import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download } from 'lucide-react';
+import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2 } from 'lucide-react';
 import { logger } from '../services/logger';
 
 export const SettingsView: React.FC = () => {
-  const { config, updateConfig } = useConfig();
+  const { config, updateConfig, loadFromToolConfig } = useConfig();
   const { t, availableLanguages } = useI18n();
   const { validation } = useValidation();
+  const [isImporting, setIsImporting] = React.useState(false);
 
   const pickFolder = async (key: keyof AppConfig) => {
     const selected = await open({
@@ -59,10 +60,31 @@ export const SettingsView: React.FC = () => {
 
         {/* Path Settings */}
         <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold flex items-center mb-2">
-            <Terminal className="mr-2 text-blue-500" size={20} />
-            Environment & Tools
-          </h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-bold flex items-center">
+              <Terminal className="mr-2 text-blue-500" size={20} />
+              Environment & Tools
+            </h3>
+            {config.installPath && (
+              <button
+                onClick={async () => {
+                  setIsImporting(true);
+                  try {
+                    await loadFromToolConfig();
+                  } catch (e) {
+                    // Error handled in context
+                  } finally {
+                    setIsImporting(false);
+                  }
+                }}
+                disabled={isImporting}
+                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {isImporting ? <Loader2 size={14} className="animate-spin" /> : <FileJson size={14} />}
+                {t('settings.load_from_config')}
+              </button>
+            )}
+          </div>
 
           <PathInput
             label={t('settings.install_path')}
@@ -103,6 +125,43 @@ export const SettingsView: React.FC = () => {
             onChange={(val) => updateConfig({ phpPath: val })}
             icon={<Terminal size={16} />}
           />
+        </div>
+
+        {/* Tool Specific Settings */}
+        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm space-y-6">
+          <h3 className="text-lg font-bold flex items-center mb-2">
+            <Database className="mr-2 text-blue-500" size={20} />
+            {t('settings.tool_settings_title')}
+          </h3>
+
+          <PathInput
+            label={t('settings.storage_folder')}
+            value={config.storageFolder}
+            onPick={() => pickFolder('storageFolder')}
+            onChange={(val) => updateConfig({ storageFolder: val })}
+            icon={<Save size={16} />}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ToggleInput
+              label={t('settings.auto_backup')}
+              value={config.autoBackupEnabled}
+              onChange={(val) => updateConfig({ autoBackupEnabled: val })}
+              icon={<ShieldCheck size={16} />}
+            />
+            <ToggleInput
+              label={t('settings.keep_xml')}
+              value={config.keepXMLFiles}
+              onChange={(val) => updateConfig({ keepXMLFiles: val })}
+              icon={<FileCode size={16} />}
+            />
+            <ToggleInput
+              label={t('settings.tool_logging')}
+              value={config.loggingEnabled}
+              onChange={(val) => updateConfig({ loggingEnabled: val })}
+              icon={<Activity size={16} />}
+            />
+          </div>
         </div>
 
         {/* Debugging */}
@@ -209,5 +268,33 @@ const PathInput: React.FC<PathInputProps> = ({ label, value, error, errorText, o
         {errorText || 'Invalid path'}
       </p>
     )}
+  </div>
+);
+
+interface ToggleInputProps {
+  label: string;
+  value: boolean;
+  onChange: (val: boolean) => void;
+  icon: React.ReactNode;
+}
+
+const ToggleInput: React.FC<ToggleInputProps> = ({ label, value, onChange, icon }) => (
+  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl">
+    <div className="flex items-center gap-3">
+      <span className="text-blue-500">{icon}</span>
+      <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{label}</span>
+    </div>
+    <button
+      onClick={() => onChange(!value)}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+        value ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-800'
+      }`}
+    >
+      <span
+        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+          value ? 'translate-x-6' : 'translate-x-1'
+        }`}
+      />
+    </button>
   </div>
 );

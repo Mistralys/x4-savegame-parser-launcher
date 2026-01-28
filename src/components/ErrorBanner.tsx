@@ -1,13 +1,18 @@
 import React from 'react';
 import { useValidation } from '../context/ValidationContext';
+import { useConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { AlertTriangle } from 'lucide-react';
 
 export const ErrorBanner: React.FC = () => {
   const { validation } = useValidation();
+  const { hasToolConfigError } = useConfig();
   const { t } = useI18n();
 
-  if (validation.isValid) return null;
+  if (validation.isValid && !hasToolConfigError) return null;
+
+  const title = !validation.isValid ? t('errors.invalid_config') : t('errors.title');
+  const message = !validation.isValid ? t('errors.fix_settings') : t('errors.config_write_failed');
 
   return (
     <div className="bg-red-500/10 border-b border-red-500/20 px-6 py-3 animate-in slide-in-from-top duration-300">
@@ -15,10 +20,10 @@ export const ErrorBanner: React.FC = () => {
         <AlertTriangle className="text-red-500 shrink-0" size={18} />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-red-600 dark:text-red-400">
-            {t('errors.invalid_config')}
+            {title}
           </p>
           <p className="text-xs text-red-500 dark:text-red-400/80 truncate">
-            {t('errors.fix_settings')}
+            {message}
           </p>
         </div>
       </div>

@@ -61,28 +61,28 @@ graph TD
 
 ### WP1: Backend Commands & Data Models
 - **Goal**: Establish the communication bridge for file operations.
-- [ ] Define `ToolConfig` struct in Rust to match the PHP tool's JSON structure.
-- [ ] Implement `save_tool_config(config: ToolConfig, install_path: PathBuf)` command.
-- [ ] Implement `load_tool_config(install_path: PathBuf)` command.
-- [ ] Register commands in `src-tauri/src/lib.rs`.
+- [x] Define `ToolConfig` struct in Rust to match the PHP tool's JSON structure.
+- [x] Implement `save_tool_config(config: ToolConfig, install_path: PathBuf)` command.
+- [x] Implement `load_tool_config(install_path: PathBuf)` command.
+- [x] Register commands in `src-tauri/src/lib.rs`.
 
 ### WP2: Frontend State & i18n
 - **Goal**: Update the application state to support new settings.
-- [ ] Expand `AppConfig` interface in `src/context/ConfigContext.tsx` with:
+- [x] Expand `AppConfig` interface in `src/context/ConfigContext.tsx` with:
     - `storageFolder`, `autoBackupEnabled`, `keepXMLFiles`, `loggingEnabled`.
-- [ ] Update `DEFAULT_CONFIG` with defaults from this document.
-- [ ] Add translation keys to `src/locales/en.json`, `de.json`, and `fr.json`.
+- [x] Update `DEFAULT_CONFIG` with defaults from this document.
+- [x] Add translation keys to `src/locales/en.json`, `de.json`, and `fr.json`.
 
 ### WP3: Config Sync Logic
 - **Goal**: Automate saving and enable manual loading.
-- [ ] Update `updateConfig` in `ConfigContext.tsx` to detect changes in tool settings and invoke `save_tool_config`.
-- [ ] Add `loadFromToolConfig()` to `ConfigContext.tsx` to fetch and apply settings via `load_tool_config`.
-- [ ] Implement error handling for the IPC calls (showing errors via `ErrorContext`).
+- [x] Update `updateConfig` in `ConfigContext.tsx` to detect changes in tool settings and invoke `save_tool_config`.
+- [x] Add `loadFromToolConfig()` to `ConfigContext.tsx` to fetch and apply settings via `load_tool_config`.
+- [x] Implement error handling for the IPC calls (showing errors via `ErrorContext`).
 
 ### WP4: UI Implementation
 - **Goal**: Expose settings and controls to the user.
-- [ ] Update `SettingsView.tsx` with a new "Savegame Parser Tool" section.
-- [ ] Add form fields for new settings (Path input for `storageFolder`, Toggles for booleans).
-- [ ] Add "Import from config.json" button with loading state.
-- [ ] Ensure the UI reacts to the "config write failed" warning banner.
+- [x] Update `SettingsView.tsx` with a new "Savegame Parser Tool" section.
+- [x] Add form fields for new settings (Path input for `storageFolder`, Toggles for booleans).
+- [x] Add "Import from config.json" button with loading state.
+- [x] Ensure the UI reacts to the "config write failed" warning banner.
 
