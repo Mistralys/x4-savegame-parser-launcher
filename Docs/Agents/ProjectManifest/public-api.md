@@ -35,7 +35,7 @@ struct SystemInfo {
 ### Context Providers
 
 #### `ConfigContext.tsx`
-- `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, parserToolPath, viewerToolPath, viewerUrl, language }`
+- `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, parserToolPath, viewerToolPath, viewerHost, viewerPort, language }`
 - `useConfig(): { config: AppConfig, updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>, isLoading: boolean }`
 
 #### `ProcessContext.tsx`

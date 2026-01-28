@@ -19,7 +19,8 @@
     "save_path": "Savegame Folder",
     "parser_path": "Parser Script Path",
     "viewer_path": "Viewer Script Path",
-    "viewer_url": "Viewer URL",
+    "viewer_host": "Viewer Host",
+    "viewer_port": "Viewer Port",
     "language": "Language",
     "save_button": "Save Configuration",
     "view_debug_log": "View Debug Log"

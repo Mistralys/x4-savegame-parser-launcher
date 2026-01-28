@@ -147,17 +147,35 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Web Settings */}
-        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
-          <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
+        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
+          <label className="flex items-center text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
             <Globe className="mr-2 text-blue-500" size={18} />
-            {t('settings.viewer_url')}
+            Web Server
           </label>
-          <input
-            type="text"
-            value={config.viewerUrl}
-            onChange={(e) => updateConfig({ viewerUrl: e.target.value })}
-            className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 space-y-2">
+              <label className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {t('settings.viewer_host')}
+              </label>
+              <input
+                type="text"
+                value={config.viewerHost}
+                onChange={(e) => updateConfig({ viewerHost: e.target.value })}
+                className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {t('settings.viewer_port')}
+              </label>
+              <input
+                type="number"
+                value={config.viewerPort}
+                onChange={(e) => updateConfig({ viewerPort: parseInt(e.target.value) || 0 })}
+                className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

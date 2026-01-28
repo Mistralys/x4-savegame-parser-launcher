@@ -8,9 +8,13 @@ export interface AppConfig {
   savegameFolderPath: string;
   parserToolPath: string;
   viewerToolPath: string;
-  viewerUrl: string;
+  viewerHost: string;
+  viewerPort: number;
   language: Language | 'auto';
 }
+
+const DEFAULT_VIEWER_HOST = 'localhost';
+const DEFAULT_VIEWER_PORT = 9494;
 
 const DEFAULT_CONFIG: AppConfig = {
   phpPath: 'php',
@@ -18,7 +22,8 @@ const DEFAULT_CONFIG: AppConfig = {
   savegameFolderPath: '',
   parserToolPath: '',
   viewerToolPath: '',
-  viewerUrl: 'http://localhost:8000',
+  viewerHost: DEFAULT_VIEWER_HOST,
+  viewerPort: DEFAULT_VIEWER_PORT,
   language: 'auto',
 };
 
@@ -40,7 +45,22 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const loadConfig = async () => {
       try {
-        const saved = await store.get<Partial<AppConfig>>('config');
+        const saved = await store.get<any>('config');
+        
+        // Migration: Split viewerUrl into host and port if needed
+        if (saved && saved.viewerUrl && !saved.viewerHost) {
+          try {
+            const url = new URL(saved.viewerUrl);
+            saved.viewerHost = url.hostname;
+            saved.viewerPort = parseInt(url.port) || DEFAULT_VIEWER_PORT;
+          } catch (e) {
+            // Fallback for simple "host:port" strings
+            const parts = saved.viewerUrl.replace('http://', '').replace('https://', '').split(':');
+            saved.viewerHost = parts[0] || DEFAULT_VIEWER_HOST;
+            saved.viewerPort = parseInt(parts[1]) || DEFAULT_VIEWER_PORT;
+          }
+        }
+
         const mergedConfig = { ...DEFAULT_CONFIG, ...saved };
         
         let targetLang: Language;

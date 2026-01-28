@@ -19,7 +19,8 @@
     "save_path": "Savegame-Verzeichnis",
     "parser_path": "Parser-Skriptpfad",
     "viewer_path": "Viewer-Skriptpfad",
-    "viewer_url": "Viewer-URL",
+    "viewer_host": "Viewer-Host",
+    "viewer_port": "Viewer-Port",
     "language": "Sprache",
     "save_button": "Konfiguration speichern",
     "view_debug_log": "Debug-Log anzeigen"

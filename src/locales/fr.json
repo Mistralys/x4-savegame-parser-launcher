@@ -19,7 +19,8 @@
     "save_path": "Dossier des sauvegardes",
     "parser_path": "Chemin du script d'analyse",
     "viewer_path": "Chemin du script de visualisation",
-    "viewer_url": "URL du visualiseur",
+    "viewer_host": "Hôte du visualiseur",
+    "viewer_port": "Port du visualiseur",
     "language": "Langue",
     "save_button": "Enregistrer la configuration",
     "view_debug_log": "Voir le journal de débogage"

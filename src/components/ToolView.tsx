@@ -31,8 +31,8 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
   };
 
   const handleOpenBrowser = async () => {
-    if (config.viewerUrl) {
-      await openUrl(config.viewerUrl);
+    if (config.viewerHost && config.viewerPort) {
+      await openUrl(`http://${config.viewerHost}:${config.viewerPort}`);
     }
   };
 
