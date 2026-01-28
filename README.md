@@ -1,7 +1,13 @@
-# Tauri + React + Typescript
+# X4 Savegame Parser : Launcher
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+This small app can be used together with the [X4 Savegame Parser][]
+to simplify running the savegame monitor and viewer. 
 
-## Recommended IDE Setup
+## Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+1. Start the app
+2. Go into settings, fill out all paths
+
+
+[X4 Savegame Parser]: https://github.com/Mistralys/x4-savegame-parser
+
