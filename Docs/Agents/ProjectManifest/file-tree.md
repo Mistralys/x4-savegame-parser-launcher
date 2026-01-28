@@ -5,7 +5,10 @@
 ├── .gitignore
 ├── Docs/
 │   └── Agents/
-│       ├── 1-initial-implementation-plan.md
+│       ├── ImplementationArchive/
+│       │   ├── 1-initial-implementation-plan.md
+│       │   ├── 2-application-concept.md
+│       │   └── README.md
 │       └── ProjectManifest/
 │           ├── README.md
 │           ├── tech-stack.md
@@ -14,32 +17,60 @@
 │           ├── data-flows.md
 │           └── constraints.md
 ├── index.html
+├── LICENSE
 ├── package-lock.json
 ├── package.json
+├── plans/
+│   └── work-packages.md
 ├── public/
 │   ├── tauri.svg
 │   └── vite.svg
 ├── README.md
+├── screenshots/
 ├── src/
 │   ├── App.css
 │   ├── App.tsx
 │   ├── assets/
+│   │   └── react.svg
 │   ├── components/
-│   │   └── ThemeToggle.tsx
+│   │   ├── BlockingModal.tsx
+│   │   ├── ErrorBanner.tsx
+│   │   ├── LogViewer.tsx
+│   │   ├── SettingsView.tsx
+│   │   ├── ThemeToggle.tsx
+│   │   ├── ToolView.tsx
+│   │   └── WindowControls.tsx
 │   ├── context/
-│   │   └── ThemeContext.tsx
+│   │   ├── ConfigContext.tsx
+│   │   ├── ErrorContext.tsx
+│   │   ├── I18nContext.tsx
+│   │   ├── ProcessContext.tsx
+│   │   ├── ThemeContext.tsx
+│   │   └── ValidationContext.tsx
 │   ├── hooks/
 │   │   └── useTheme.ts
-│   └── main.tsx
+│   ├── locales/
+│   │   ├── de.json
+│   │   ├── en.json
+│   │   └── fr.json
+│   ├── main.tsx
+│   ├── services/
+│   │   └── logger.ts
+│   └── vite-env.d.ts
 ├── src-tauri/
 │   ├── build.rs
 │   ├── Cargo.lock
 │   ├── Cargo.toml
 │   ├── capabilities/
 │   │   └── default.json
+│   ├── gen/
+│   ├── icons/
 │   ├── src/
 │   │   ├── lib.rs
-│   │   └── main.rs
+│   │   ├── main.rs
+│   │   └── process.rs
 │   └── tauri.conf.json
-└── tsconfig.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 ```

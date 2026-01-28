@@ -5,10 +5,13 @@
 ### `src-tauri/src/lib.rs`
 
 #### Commands
-- `fn greet(name: &str) -> String`
-  - *Returns a greeting string.*
 - `async fn get_system_info() -> Result<SystemInfo, String>`
-  - *Fetches current OS and Architecture.*
+- `fn log_to_file(app: AppHandle, level: String, message: String) -> Result<(), String>`
+- `fn clear_log_file(app: AppHandle) -> Result<(), String>`
+- `async fn start_tool(app: AppHandle, manager: State<ProcessManager>, tool: String, php_path: String, script_path: String) -> Result<(), String>`
+- `async fn stop_tool(manager: State<ProcessManager>, tool: String) -> Result<(), String>`
+- `async fn is_tool_running(manager: State<ProcessManager>, tool: String) -> Result<bool, String>`
+- `async fn open_log_dir(app: AppHandle) -> Result<(), String>`
 
 #### Models
 ```rust
@@ -19,44 +22,47 @@ struct SystemInfo {
 }
 ```
 
-#### Entry Point
-- `pub fn run()`
-  - *Initializes the Tauri application, registers handlers, and runs the builder.*
+### `src-tauri/src/process.rs`
+
+#### Events (Emitted to Frontend)
+- `process-output`
+  - Payload: `{ tool: String, message: String, stream: String }`
 
 ---
 
 ## Frontend (TypeScript/React)
 
-### `src/context/ThemeContext.tsx`
+### Context Providers
 
-#### Types
-- `type Theme = "light" | "dark" | "system"`
+#### `ConfigContext.tsx`
+- `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, parserToolPath, viewerToolPath, viewerUrl, language }`
+- `useConfig(): { config: AppConfig, updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>, isLoading: boolean }`
 
-#### Interfaces
-- `interface ThemeContextType { theme: Theme; setTheme: (theme: Theme) => void; }`
+#### `ProcessContext.tsx`
+- `type ToolStatus = 'running' | 'stopped' | 'starting' | 'stopping'`
+- `useProcess(): { tools: Record<string, ToolState>, startTool: (tool: string) => Promise<void>, stopTool: (tool: string) => Promise<void>, clearLogs: (tool: string) => void }`
 
-#### Components
-- `const ThemeProvider: React.FC<{ children: React.ReactNode }>`
-  - *Context provider for theme state.*
+#### `I18nContext.tsx`
+- `type Language = 'en' | 'fr' | 'de'`
+- `useI18n(): { language: Language, setLanguage: (lang: Language) => void, t: (path: string) => string, availableLanguages: { code: Language, name: string }[] }`
 
-#### Hooks
-- `const useTheme: () => ThemeContextType`
-  - *Returns the current theme context.*
+#### `ValidationContext.tsx`
+- `useValidation(): { validation: ValidationResult, isValidating: boolean, validateNow: () => Promise<void> }`
 
-### `src/hooks/useTheme.ts`
-- `export { useTheme } from "../context/ThemeContext"`
+#### `ThemeContext.tsx`
+- `type Theme = 'light' | 'dark' | 'system'`
+- `useTheme(): { theme: Theme, setTheme: (theme: Theme) => void }`
 
-### `src/components/ThemeToggle.tsx`
-- `const ThemeToggle: () => JSX.Element`
-  - *UI component to switch between Light, Dark, and System themes.*
+#### `ErrorContext.tsx`
+- `useError(): { showError: (title, message, details?) => void, clearError: () => void, currentError: ErrorDialog | null }`
 
-### `src/App.tsx`
+### Components
 
-#### Interfaces
-- `interface SystemInfo { os: string; arch: string; }`
-
-#### Components
-- `function App(): JSX.Element`
-  - *Main application shell.*
-- `const NavItem: ({ icon, label, active }: { icon: React.ReactNode; label: string; active?: boolean }) => JSX.Element`
-  - *Sidebar navigation item component.*
+- `App`: Main application entry.
+- `ToolView`: Component for managing individual tools (Parser/Viewer).
+- `SettingsView`: UI for configuration management.
+- `LogViewer`: Displays real-time process output.
+- `ThemeToggle`: Switcher for light/dark/system themes.
+- `ErrorBanner`: Global error display.
+- `BlockingModal`: For critical states (e.g. initial validation).
+- `WindowControls`: Custom title bar buttons for Tauri.

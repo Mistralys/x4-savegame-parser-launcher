@@ -1,20 +1,35 @@
 # Key Data Flows
 
 ## IPC: Frontend to Backend (Invoke)
-1. **Trigger:** A React component (e.g., `App.tsx`) calls `invoke("command_name", { args })`.
+1. **Trigger:** A React component calls `invoke("command_name", { args })`.
 2. **Backend Processing:** Tauri routes the call to the corresponding function in `lib.rs` marked with `#[tauri::command]`.
 3. **Response:** The Rust function returns a value (wrapped in `Result<T, E>` for error handling).
-4. **UI Update:** The frontend receives the response in a Promise (`.then()` / `.catch()`) and updates local state (via `useState`) to trigger a re-render.
+4. **UI Update:** The frontend receives the response and updates context or local state.
+
+## Tool Process Management & Log Streaming
+1. **Start Command:** `ProcessContext` calls `start_tool` via IPC.
+2. **Process Spawn:** `ProcessManager` (Rust) spawns a PHP child process with piped stdout/stderr.
+3. **Log Interception:** `ProcessManager` spawns tokio tasks to read process output.
+4. **Event Emission:** Output is emitted to the frontend via Tauri's `emit("process-output", ...)` event.
+5. **Log Collection:** `ProcessContext` listens for `process-output` and updates its `logs` state for the relevant tool.
+6. **Display:** `LogViewer` renders the logs from the context.
+
+## Configuration Persistence
+1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
+2. **Updating:** `updateConfig` updates the React state and immediately saves to the persistent store.
+3. **Auto-Detection:** On first run (or if set to 'auto'), system language is detected and applied.
+
+## Environment Validation
+1. **Trigger:** Validation runs on mount and every 5 seconds (periodic check).
+2. **Checks:** `ValidationContext` uses `tauri-plugin-fs` to check if PHP, tool scripts, and folder paths exist.
+3. **Blocker:** If essential paths are invalid, a `BlockingModal` prevents tool usage until settings are corrected.
 
 ## Theme Synchronization
-1. **Initial Load:** `ThemeProvider` reads the theme from `localStorage` (defaulting to `system`).
-2. **State Management:** Theme state is held in `ThemeContext`.
-3. **DOM Manipulation:** An `useEffect` hook in `ThemeProvider` adds/removes `.dark` or `.light` classes on `document.documentElement`.
-4. **Persistence:** Any change via `setTheme` updates the context state and `localStorage`.
-5. **System Listening:** An `useEffect` hook sets up a `matchMedia` listener to detect and react to OS-level theme changes when the mode is set to `system`.
+1. **Initial Load:** `ThemeContext` reads the theme from `localStorage`.
+2. **DOM Manipulation:** An `useEffect` hook adds/removes `.dark` or `.light` classes on `document.documentElement`.
+3. **System Listening:** A `matchMedia` listener reacts to OS-level theme changes when mode is set to `system`.
 
 ## Application Lifecycle
-1. **Entry (Backend):** `main.rs` calls `lib::run()`.
-2. **Initialization (Backend):** `tauri::Builder` sets up plugins, handlers, and the window context.
-3. **Entry (Frontend):** `main.tsx` renders the `ThemeProvider` wrapping the `App`.
-4. **Mounting:** `App.tsx` runs an `useEffect` hook to fetch initial `system_info` via IPC.
+1. **Backend Init:** `main.rs` -> `lib::run()` -> Plugin setup (Store, FS, etc.) -> ProcessManager setup.
+2. **Frontend Init:** `main.tsx` -> Multiple Providers -> `App`.
+3. **Tool Cleanup:** When the window is destroyed, `on_window_event` in Rust triggers `stop_all()` to kill any orphan PHP processes.
