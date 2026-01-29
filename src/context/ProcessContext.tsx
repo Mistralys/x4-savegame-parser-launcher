@@ -29,6 +29,17 @@ interface ToolState {
   lastTick?: number;
   detectedSave?: { name: string; path: string };
   version?: string;
+  error?: {
+    message: string;
+    code?: number;
+    errors?: Array<{
+      message: string;
+      code?: number;
+      class?: string;
+      details?: string;
+      trace?: string;
+    }>;
+  };
 }
 
 interface ProcessContextType {
@@ -106,8 +117,12 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
               case 'error':
                 processedMessage = `[ERROR] ${parsed.message}`;
-                // We don't automatically stop the tool here as the process might still be alive
-                // or handle its own exit, but we could trigger an error UI.
+                updates.error = {
+                  message: parsed.message || 'Unknown error',
+                  code: (parsed as any).code,
+                  errors: (parsed as any).errors
+                };
+                // When a fatal error occurs, the process will exit shortly
                 break;
             }
           } catch (e) {
@@ -130,7 +145,7 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const startTool = useCallback(async (tool: string) => {
-    setTools(prev => ({ ...prev, [tool]: { ...prev[tool], status: 'starting' } }));
+    setTools(prev => ({ ...prev, [tool]: { ...prev[tool], status: 'starting', error: undefined } }));
     
     try {
       const phpPath = config.phpPath;
