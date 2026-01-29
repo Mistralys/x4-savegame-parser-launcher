@@ -1,6 +1,7 @@
-# NDJSON Monitor Interface Reference
+# NDJSON Monitor Interface
 
-This document describes the machine-readable interface for the X4 Savegame Monitor. This interface is designed for "Launcher" applications that wrap the monitor process and need to display its status in a UI.
+This document describes the machine-readable interface for the X4 Savegame Monitor. 
+This interface is designed for "Launcher" applications that wrap the monitor process and need to display its status in a UI.
 
 ## Invocation
 
@@ -8,6 +9,8 @@ To enable the machine-readable output, pass the `--json` flag to the monitor scr
 
 ```bash
 php bin/php/run-monitor.php --json
+# OR using the wrapper script on Linux/Mac
+./bin/run-monitor --json
 ```
 
 ## Protocol
@@ -160,17 +163,106 @@ Detailed text logs. Only emitted if `loggingEnabled` configuration is enabled.
 
 ### 4. Errors (`error`)
 
-Emitted when a fatal exception occurs. The process will likely terminate after this.
+Emitted when a fatal exception occurs during monitor execution.
+
+**Important**: Errors can occur at two points:
+1. **During startup**: Caught by the wrapper script before the event loop starts
+2. **During runtime**: Caught within the event loop (e.g., during save processing)
+
+In both cases, an error message will be sent before the process terminates.
+
+#### Error Structure
 
 ```json
 {
   "type": "error",
-  "message": "Something went wrong",
-  "code": 123,
-  "trace": "#0 /path/to/file.php(10): ...",
-  "timestamp": "2026-01-29T10:30:45+00:00"
+  "message": "Top-level exception message",
+  "code": 12345,
+  "timestamp": "2026-01-29T10:30:45+00:00",
+  "errors": [
+    {
+      "message": "Main exception message",
+      "code": 12345,
+      "class": "Mistralys\\X4\\SaveViewer\\SaveViewerException",
+      "details": "Additional debug information",
+      "trace": "#0 /path/to/file.php(10): ..."
+    },
+    {
+      "message": "Previous exception message",
+      "code": 67890,
+      "class": "AppUtils\\FileHelper_Exception",
+      "details": "More context about the underlying error",
+      "trace": "#0 /other/file.php(20): ..."
+    }
+  ]
 }
 ```
+
+#### Fields
+
+- **message**: Top-level exception message (same as `errors[0].message`)
+- **code**: Top-level exception code (same as `errors[0].code`)
+- **timestamp**: ISO 8601 timestamp when the error occurred
+- **errors**: Array of exception objects in the chain, from top to bottom (most recent to root cause)
+
+#### Exception Object Fields
+
+Each object in the `errors` array contains:
+- **message**: The exception message
+- **code**: The exception code
+- **class**: Fully qualified class name of the exception
+- **trace**: Stack trace as a string
+- **details**: *(Optional)* Additional debug information, only present for `AppUtils\BaseException` instances
+
+#### Example: Simple Exception
+
+```json
+{
+  "type": "error",
+  "message": "File not found",
+  "code": 404,
+  "timestamp": "2026-01-29T10:30:45+00:00",
+  "errors": [
+    {
+      "message": "File not found",
+      "code": 404,
+      "class": "RuntimeException",
+      "trace": "#0 /path/to/file.php(10): ..."
+    }
+  ]
+}
+```
+
+#### Example: Chained Exceptions
+
+```json
+{
+  "type": "error",
+  "message": "Cannot read savegame files from the saves folder.",
+  "code": 136003,
+  "timestamp": "2026-01-29T10:30:45+00:00",
+  "errors": [
+    {
+      "message": "Cannot read savegame files from the saves folder.",
+      "code": 136003,
+      "class": "Mistralys\\X4\\SaveViewer\\SaveViewerException",
+      "trace": "#0 /path/to/SaveSelector.php(239): ..."
+    },
+    {
+      "message": "Permission denied",
+      "code": 13,
+      "class": "AppUtils\\FileHelper_Exception",
+      "details": "Failed to open directory: /path/to/saves",
+      "trace": "#0 /path/to/FileHelper.php(150): ..."
+    }
+  ]
+}
+```
+
+**After sending an error message**:
+- The event loop will be stopped
+- The process will exit with code `1`
+- No further messages will be sent
 
 ## Example Stream
 
