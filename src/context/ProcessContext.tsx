@@ -12,9 +12,23 @@ interface ProcessOutput {
   stream: 'stdout' | 'stderr';
 }
 
+interface MonitorMessage {
+  type: 'event' | 'tick' | 'log' | 'error';
+  timestamp?: string;
+  name?: string;
+  payload?: any;
+  message?: string;
+  level?: 'info' | 'warn' | 'error' | 'debug';
+  counter?: number;
+}
+
 interface ToolState {
   status: ToolStatus;
   logs: string[];
+  currentEvent?: string;
+  lastTick?: number;
+  detectedSave?: { name: string; path: string };
+  version?: string;
 }
 
 interface ProcessContextType {
@@ -52,15 +66,60 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     const unlisten = listen<ProcessOutput>('process-output', (event) => {
       const { tool, message } = event.payload;
+      
       setTools(prev => {
         const toolState = prev[tool];
         if (!toolState) return prev;
+
+        let processedMessage = message;
+        let updates: Partial<ToolState> = {};
+
+        // Try to parse NDJSON if it's the parser tool
+        if (tool === 'parser' && message.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(message) as MonitorMessage;
+            
+            switch (parsed.type) {
+              case 'tick':
+                updates.lastTick = parsed.counter;
+                // Don't add ticks to log history to keep it clean
+                return {
+                  ...prev,
+                  [tool]: { ...toolState, ...updates }
+                };
+              
+              case 'event':
+                updates.currentEvent = parsed.name;
+                if (parsed.name === 'MONITOR_STARTED' && parsed.payload?.version) {
+                  updates.version = parsed.payload.version;
+                }
+                if (parsed.name === 'SAVE_DETECTED' && parsed.payload) {
+                  updates.detectedSave = parsed.payload;
+                }
+                processedMessage = `[EVENT] ${parsed.name}${parsed.payload ? ': ' + JSON.stringify(parsed.payload) : ''}`;
+                break;
+
+              case 'log':
+                const levelStr = parsed.level ? `[${parsed.level.toUpperCase()}] ` : '';
+                processedMessage = `${levelStr}${parsed.message}`;
+                break;
+
+              case 'error':
+                processedMessage = `[ERROR] ${parsed.message}`;
+                // We don't automatically stop the tool here as the process might still be alive
+                // or handle its own exit, but we could trigger an error UI.
+                break;
+            }
+          } catch (e) {
+            // Not valid JSON or failed to parse, fallback to raw message
+          }
+        }
         
         // Keep only last 1000 lines for performance
-        const newLogs = [...toolState.logs, message].slice(-1000);
+        const newLogs = [...toolState.logs, processedMessage].slice(-1000);
         return {
           ...prev,
-          [tool]: { ...toolState, logs: newLogs }
+          [tool]: { ...toolState, ...updates, logs: newLogs }
         };
       });
     });

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Play, Square, Trash2, ExternalLink, Activity } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Play, Square, Trash2, ExternalLink, Activity, FileText } from 'lucide-react';
 import { useProcess, ToolStatus } from '../context/ProcessContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
@@ -21,6 +21,16 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
   const state = tools[tool];
   const isRunning = state.status === 'running';
   const isTransitioning = state.status === 'starting' || state.status === 'stopping';
+  const [pulse, setPulse] = useState(false);
+
+  // Pulse effect when a new tick or event arrives
+  useEffect(() => {
+    if (state.lastTick || state.currentEvent) {
+      setPulse(true);
+      const timer = setTimeout(() => setPulse(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [state.lastTick, state.currentEvent]);
 
   const handleToggle = async () => {
     if (isRunning) {
@@ -43,14 +53,25 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
       {/* Status Bar */}
       <div className="flex items-center justify-between p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-xl ${isRunning ? 'bg-green-500/10 text-green-500' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'}`}>
+          <div className={`p-3 rounded-xl transition-all duration-300 ${
+            isRunning
+              ? (pulse ? 'bg-green-500/30 text-green-400' : 'bg-green-500/10 text-green-500')
+              : 'bg-gray-200 dark:bg-gray-800 text-gray-400'
+          }`}>
             <Activity size={24} className={isRunning ? 'animate-pulse' : ''} />
           </div>
           <div>
-            <h3 className="text-lg font-bold capitalize">{tool}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold capitalize">{tool}</h3>
+              {state.version && (
+                <span className="text-[10px] bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-gray-500">
+                  v{state.version}
+                </span>
+              )}
+            </div>
             <p className="text-xs font-medium text-gray-500">
               {t('app.status')}: <span className={isRunning ? 'text-green-500' : 'text-gray-400'}>
-                {isRunning ? t('tools.running') : t('tools.stopped')}
+                {isRunning ? (state.currentEvent ? t(`tools.events.${state.currentEvent}`) : t('tools.running')) : t('tools.stopped')}
               </span>
             </p>
           </div>
@@ -89,6 +110,37 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
             )}
           </button>
         </div>
+  
+        {/* Structured Info (Parser only) */}
+        {tool === 'parser' && isRunning && state.detectedSave && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+                <FileText size={20} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-blue-500/50 uppercase tracking-wider">{t('tools.latest_save')}</p>
+                <p className="text-sm font-mono font-bold text-gray-700 dark:text-gray-300 truncate max-w-[200px]" title={state.detectedSave.path}>
+                  {state.detectedSave.name}
+                </p>
+              </div>
+            </div>
+            
+            {state.currentEvent && (
+              <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-green-500/10 text-green-500">
+                  <Activity size={20} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-green-500/50 uppercase tracking-wider">Current Activity</p>
+                  <p className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                    {t(`tools.events.${state.currentEvent}`)}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Log Output */}

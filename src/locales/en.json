@@ -36,7 +36,16 @@
     "running": "Running",
     "stopped": "Stopped",
     "open_browser": "Open Browser",
-    "clear_logs": "Clear Logs"
+    "clear_logs": "Clear Logs",
+    "latest_save": "Latest Save",
+    "events": {
+      "MONITOR_STARTED": "Monitor Started",
+      "SAVE_DETECTED": "Save Detected",
+      "SAVE_PARSING_STARTED": "Parsing Started",
+      "SAVE_UNZIPPING": "Unzipping Save...",
+      "SAVE_EXTRACTING": "Extracting Data...",
+      "SAVE_PARSING_COMPLETE": "Parsing Complete"
+    }
   },
   "errors": {
     "title": "Error",

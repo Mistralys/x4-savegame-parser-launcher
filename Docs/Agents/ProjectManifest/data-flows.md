@@ -14,6 +14,16 @@
 5. **Log Collection:** `ProcessContext` listens for `process-output` and updates its `logs` state for the relevant tool.
 6. **Display:** `LogViewer` renders the logs from the context.
 
+## NDJSON Structured Communication
+1. **Protocol:** The monitor is invoked with the `--json` flag, emitting NDJSON to `stdout`.
+2. **Parsing:** `ProcessContext` monitors the stream and attempts to parse lines starting with `{`.
+3. **State Updates:**
+   - `tick`: Updates `lastTick` for heartbeat visualization.
+   - `event`: Updates `currentEvent` (e.g., `SAVE_UNZIPPING`) and `detectedSave`.
+   - `log`: Formats logs using provided `level` and `message`.
+   - `error`: Formats as `[ERROR]` and adds to log history.
+4. **UI Response:** `ToolView` reacts to these state changes by displaying progress labels and savegame information.
+
 ## Configuration Persistence
 1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
 2. **Updating:** `updateConfig` updates the React state and immediately saves to the persistent store.

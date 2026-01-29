@@ -17,7 +17,10 @@
 - **Type Safety:** All props, state, and IPC payloads must have explicit TypeScript interfaces.
 - **Logging:** Use the `logger` service (`src/services/logger.ts`) for consistent log reporting to both console and file.
 - **I18n:** All user-facing strings must be localized via the `t()` function from `I18nContext`.
-- **Styling:** 
+- **Testing:**
+  - Use **Vitest** for unit and integration testing.
+  - Use **React Testing Library** for component testing.
+- **Styling:**
   - Prefer **Tailwind CSS** utility classes.
   - Interactive elements must support both light and dark modes.
 

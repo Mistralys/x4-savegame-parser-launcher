@@ -42,8 +42,14 @@ impl ProcessManager {
         }
 
         let mut command = Command::new(php_path);
+        command.arg(script_path);
+
+        // Add --json flag for the parser tool
+        if tool_name == "parser" {
+            command.arg("--json");
+        }
+
         command
-            .arg(script_path)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
 

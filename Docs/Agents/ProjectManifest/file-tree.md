@@ -2,6 +2,8 @@
 
 ```text
 .
+├── .github/
+│   └── workflows/
 ├── .gitignore
 ├── Docs/
 │   └── Agents/
@@ -10,6 +12,8 @@
 │       │   ├── 2-application-concept.md
 │       │   ├── 3-initial-work-packages.md
 │       │   ├── 4-config-editing.md
+│       │   ├── 5-release-automation-master.md
+│       │   ├── 6-ndjson-communication.md
 │       │   └── README.md
 │       └── ProjectManifest/
 │           ├── README.md
@@ -17,12 +21,14 @@
 │           ├── file-tree.md
 │           ├── public-api.md
 │           ├── data-flows.md
+│           ├── monitor-ndjson-reference.md
 │           └── constraints.md
 ├── index.html
 ├── LICENSE
 ├── package-lock.json
 ├── package.json
 ├── plans/
+│   ├── ndjson-implementation.md
 │   └── work-packages.md
 ├── public/
 │   ├── tauri.svg
@@ -47,6 +53,7 @@
 │   │   ├── ErrorContext.tsx
 │   │   ├── I18nContext.tsx
 │   │   ├── ProcessContext.tsx
+│   │   ├── ThemeContext.test.tsx
 │   │   ├── ThemeContext.tsx
 │   │   └── ValidationContext.tsx
 │   ├── hooks/
@@ -57,7 +64,10 @@
 │   │   └── fr.json
 │   ├── main.tsx
 │   ├── services/
+│   │   ├── logger.test.ts
 │   │   └── logger.ts
+│   ├── test/
+│   │   └── setup.ts
 │   └── vite-env.d.ts
 ├── src-tauri/
 │   ├── build.rs
@@ -74,5 +84,7 @@
 │   └── tauri.conf.json
 ├── tsconfig.json
 ├── tsconfig.node.json
-└── vite.config.ts
+├── vite.config.ts
+├── vitest.config.ts
+└── changelog.md
 ```

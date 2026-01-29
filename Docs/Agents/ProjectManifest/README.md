@@ -14,7 +14,9 @@ This directory contains the "Source of Truth" for the X4 Savegame Monitor & Laun
    - How the frontend communicates with the backend and how state flows through the app.
 5. **[Current Constraints & Guidelines](./constraints.md)**
    - Established rules and best practices for ongoing development.
+6. **[NDJSON Monitor Interface](./monitor-ndjson-reference.md)**
+   - Specification for the machine-readable communication between monitor and launcher.
 
 ---
 
-*Last Updated: 2026-01-28*
+*Last Updated: 2026-01-29*
