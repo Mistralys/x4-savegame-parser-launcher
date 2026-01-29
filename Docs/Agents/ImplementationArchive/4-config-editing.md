@@ -1,11 +1,11 @@
 # Configuration Editing
 
-The savegame parser package uses a JSON-based configuration. It is located
+The savegame monitor package uses a JSON-based configuration. It is located
 here:
 
 `{INSTALL_PATH}/config.json`
 
-> NOTE: {INSTALL_PATH} is where the savegame parser package has been installed
+> NOTE: {INSTALL_PATH} is where the savegame monitor package has been installed
 > (as set in the app's settings).
 
 ## JSON Structure
@@ -81,7 +81,7 @@ graph TD
 
 ### WP4: UI Implementation
 - **Goal**: Expose settings and controls to the user.
-- [x] Update `SettingsView.tsx` with a new "Savegame Parser Tool" section.
+- [x] Update `SettingsView.tsx` with a new "Savegame Monitor Tool" section.
 - [x] Add form fields for new settings (Path input for `storageFolder`, Toggles for booleans).
 - [x] Add "Import from config.json" button with loading state.
 - [x] Ensure the UI reacts to the "config write failed" warning banner.

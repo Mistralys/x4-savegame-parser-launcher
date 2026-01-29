@@ -1,4 +1,4 @@
-# Application Concept - X4 Savegame Parser Launcher
+# Application Concept - X4 Savegame Monitor Launcher
 
 ## Purpose
 
@@ -37,9 +37,9 @@ The launcher manages two primary tools:
 - **Continuous Validation**: The app periodically checks the environment (every 5 seconds) to stay in sync with the file system.
 - **Session Logging**: Each session generates a fresh debug log, making it easy for users to report issues with full context.
 
-## Background: The X4 Savegame Parser
+## Background: The X4 Savegame Monitor
 
-The savegame parser tool consists of two components:
+The savegame monitor tool consists of two components:
 
 ### The Parser
 A specialized tool that parses notoriously large XML files (often >2GB). It monitors the game's savegame folder, automatically extracts data from new saves, and creates backups to prevent them from being overwritten by the game's auto-save rotation.

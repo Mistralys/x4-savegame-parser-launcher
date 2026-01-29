@@ -131,3 +131,14 @@ impl ProcessManager {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_process_manager_new() {
+        let manager = ProcessManager::new();
+        assert!(!manager.is_running("test"));
+    }
+}

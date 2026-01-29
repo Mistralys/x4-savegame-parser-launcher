@@ -126,7 +126,7 @@ function App() {
                   e.stopPropagation();
                   const { message } = await import('@tauri-apps/plugin-dialog');
                   await message(
-                    `X4 Savegame Parser & Launcher v0.1.0\n\nOS: ${systemInfo?.os}\nArch: ${systemInfo?.arch}\n\nBuilt with Tauri & React`,
+                    `X4 Savegame Monitor & Launcher v0.1.0\n\nOS: ${systemInfo?.os}\nArch: ${systemInfo?.arch}\n\nBuilt with Tauri & React`,
                     { title: 'About', kind: 'info' }
                   );
                 }}

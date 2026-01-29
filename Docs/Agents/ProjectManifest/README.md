@@ -1,6 +1,6 @@
 # Project Manifest
 
-This directory contains the "Source of Truth" for the X4 Savegame Parser & Launcher. These documents are designed to provide AI agents and developers with a comprehensive understanding of the project without requiring a full code audit.
+This directory contains the "Source of Truth" for the X4 Savegame Monitor & Launcher. These documents are designed to provide AI agents and developers with a comprehensive understanding of the project without requiring a full code audit.
 
 ## Documents
 

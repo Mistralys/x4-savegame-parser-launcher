@@ -1,4 +1,4 @@
-# Incremental Work Packages - X4 Savegame Parser Launcher
+# Incremental Work Packages - X4 Savegame Monitor Launcher
 
 This document breaks down the implementation into logical, independent work packages. Each package results in a stable, testable state.
 
