@@ -16,7 +16,6 @@ struct SystemInfo {
 #[serde(rename_all = "camelCase")]
 struct ToolConfig {
     game_folder: String,
-    storage_folder: String,
     viewer_host: String,
     viewer_port: u16,
     auto_backup_enabled: bool,

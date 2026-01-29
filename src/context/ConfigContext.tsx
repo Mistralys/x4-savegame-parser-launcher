@@ -12,7 +12,6 @@ export interface AppConfig {
   viewerPort: number;
   language: Language | 'auto';
   // Tool-specific config
-  storageFolder: string;
   autoBackupEnabled: boolean;
   keepXMLFiles: boolean;
   loggingEnabled: boolean;
@@ -29,7 +28,6 @@ const DEFAULT_CONFIG: AppConfig = {
   viewerHost: DEFAULT_VIEWER_HOST,
   viewerPort: DEFAULT_VIEWER_PORT,
   language: 'auto',
-  storageFolder: 'archived-saves',
   autoBackupEnabled: true,
   keepXMLFiles: false,
   loggingEnabled: false,
@@ -98,7 +96,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const toolConfig = {
       gameFolder: currentConfig.gameFolderPath,
-      storageFolder: currentConfig.storageFolder,
       viewerHost: currentConfig.viewerHost,
       viewerPort: currentConfig.viewerPort,
       autoBackupEnabled: currentConfig.autoBackupEnabled,
@@ -129,7 +126,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       await updateConfig({
         gameFolderPath: toolConfig.gameFolder,
-        storageFolder: toolConfig.storageFolder,
         viewerHost: toolConfig.viewerHost,
         viewerPort: toolConfig.viewerPort,
         autoBackupEnabled: toolConfig.autoBackupEnabled,
@@ -161,7 +157,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Check if any tool-relevant settings changed
       const toolFields: (keyof AppConfig)[] = [
         'gameFolderPath',
-        'storageFolder',
         'viewerHost',
         'viewerPort',
         'autoBackupEnabled',

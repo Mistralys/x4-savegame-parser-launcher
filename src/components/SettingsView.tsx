@@ -134,14 +134,6 @@ export const SettingsView: React.FC = () => {
             {t('settings.tool_settings_title')}
           </h3>
 
-          <PathInput
-            label={t('settings.storage_folder')}
-            value={config.storageFolder}
-            onPick={() => pickFolder('storageFolder')}
-            onChange={(val) => updateConfig({ storageFolder: val })}
-            icon={<Save size={16} />}
-          />
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ToggleInput
               label={t('settings.auto_backup')}

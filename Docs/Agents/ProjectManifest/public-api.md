@@ -26,7 +26,6 @@ struct SystemInfo {
 #[derive(serde::Serialize, serde::Deserialize)]
 struct ToolConfig {
     game_folder: String,
-    storage_folder: String,
     viewer_host: String,
     viewer_port: u16,
     auto_backup_enabled: bool,
@@ -48,7 +47,7 @@ struct ToolConfig {
 ### Context Providers
 
 #### `ConfigContext.tsx`
-- `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, installPath, viewerHost, viewerPort, language, storageFolder, autoBackupEnabled, keepXMLFiles, loggingEnabled }`
+- `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, installPath, viewerHost, viewerPort, language, autoBackupEnabled, keepXMLFiles, loggingEnabled }`
 - `useConfig(): { config: AppConfig, updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>, loadFromToolConfig: () => Promise<void>, isLoading: boolean, hasToolConfigError: boolean }`
 
 #### `ProcessContext.tsx`

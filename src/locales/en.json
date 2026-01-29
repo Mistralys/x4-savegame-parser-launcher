@@ -24,7 +24,6 @@
     "save_button": "Save Configuration",
     "view_debug_log": "View Debug Log",
     "tool_settings_title": "Savegame Monitor Tool Settings",
-    "storage_folder": "Storage Folder (Relative to Game Path)",
     "auto_backup": "Auto Backup Enabled",
     "keep_xml": "Keep XML Files",
     "tool_logging": "Enable Tool Logging",
