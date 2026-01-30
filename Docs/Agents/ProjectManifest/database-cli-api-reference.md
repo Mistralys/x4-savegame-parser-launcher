@@ -469,6 +469,84 @@ bin/query list-saves
 
 ---
 
+#### `queue-extraction`
+Queue saves for automatic extraction by the monitor.
+
+```bash
+# Queue single save
+bin/query queue-extraction --save=autosave_01
+
+# Queue multiple saves
+bin/query queue-extraction --saves="autosave_01 autosave_02 save_020"
+
+# View queue
+bin/query queue-extraction --list
+
+# Clear queue
+bin/query queue-extraction --clear
+```
+
+**No `--save` flag required for `--list` and `--clear` operations**.
+
+**Flags**:
+- `--save`: Single save to queue (name or ID)
+- `--saves`: Space-separated list of saves to queue
+- `--list`: Display current queue contents
+- `--clear`: Clear all queued saves
+
+**How It Works**:
+1. Saves are added to a persistent queue file (`extraction-queue.json` in storage folder)
+2. Monitor checks queue before processing the most recent save
+3. Queued saves are extracted in order (FIFO - First In, First Out)
+4. Already-extracted saves are skipped automatically
+5. Non-existent saves are removed from queue automatically
+
+**Queue Response**:
+```json
+{
+  "success": true,
+  "command": "queue-extraction",
+  "data": {
+    "queued": ["autosave_01", "autosave_02"],
+    "count": 2,
+    "message": "Queued 2 saves for extraction",
+    "totalInQueue": 5
+  }
+}
+```
+
+**List Response**:
+```json
+{
+  "success": true,
+  "command": "queue-extraction",
+  "data": {
+    "queue": ["autosave_01", "autosave_02", "save_020"],
+    "count": 3
+  }
+}
+```
+
+**Use Case Example**:
+```bash
+# 1. List available saves
+bin/query list-saves
+
+# 2. Queue the saves you want extracted
+bin/query queue-extraction --saves="autosave_01 autosave_02 autosave_03"
+
+# 3. Start the monitor (or it's already running)
+bin/run-monitor
+
+# Monitor will process:
+# > Processing queued save [autosave_01]...
+# > Processing queued save [autosave_02]...
+# > Processing queued save [autosave_03]...
+# > Queue empty, monitoring for new saves.
+```
+
+---
+
 #### `clear-cache`
 Removes all cached query results.
 
