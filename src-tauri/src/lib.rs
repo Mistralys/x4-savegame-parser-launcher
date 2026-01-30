@@ -135,6 +135,67 @@ async fn check_tool_config_exists(install_path: String) -> Result<bool, String> 
     Ok(path.exists())
 }
 
+#[tauri::command]
+async fn query_save_data(
+    php_path: String,
+    script_path: String,
+    command: String,
+    save: String,
+    filter: Option<String>,
+    limit: Option<u32>,
+    offset: Option<u32>,
+    cache_key: Option<String>,
+) -> Result<serde_json::Value, String> {
+    let mut cmd = tokio::process::Command::new(php_path);
+    cmd.arg(script_path);
+    cmd.arg(command);
+    cmd.arg("--save");
+    cmd.arg(save);
+
+    if let Some(f) = filter {
+        if !f.is_empty() {
+            cmd.arg("--filter");
+            cmd.arg(f);
+        }
+    }
+
+    if let Some(l) = limit {
+        cmd.arg("--limit");
+        cmd.arg(l.to_string());
+    }
+
+    if let Some(o) = offset {
+        cmd.arg("--offset");
+        cmd.arg(o.to_string());
+    }
+
+    if let Some(ck) = cache_key {
+        if !ck.is_empty() {
+            cmd.arg("--cache-key");
+            cmd.arg(ck);
+        }
+    }
+
+    #[cfg(windows)]
+    {
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+        cmd.creation_flags(CREATE_NO_WINDOW);
+    }
+
+    let output = cmd.output().await.map_err(|e| e.to_string())?;
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    
+    if stdout.trim().is_empty() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("Command returned empty output. Stderr: {}", stderr));
+    }
+
+    let json: serde_json::Value = serde_json::from_str(&stdout)
+        .map_err(|e| format!("Failed to parse JSON: {}. Output was: {}", e, stdout))?;
+    
+    Ok(json)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -155,7 +216,8 @@ pub fn run() {
             open_log_dir,
             save_tool_config,
             load_tool_config,
-            check_tool_config_exists
+            check_tool_config_exists,
+            query_save_data
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?

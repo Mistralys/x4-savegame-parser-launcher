@@ -220,6 +220,7 @@ export const getToolPaths = (installPath: string) => {
   return {
     viewer: normalizedPath ? `${normalizedPath}/bin/php/run-ui.php` : '',
     parser: normalizedPath ? `${normalizedPath}/bin/php/run-monitor.php` : '',
+    query: normalizedPath ? `${normalizedPath}/bin/php/query.php` : '',
   };
 };
 

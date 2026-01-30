@@ -48,12 +48,12 @@ graph TD
 - [ ] Implement filtering logic in PHP for the `ships` collection.
 
 ### Phase 2: Tauri/Rust Integration
-- [ ] Create a new Rust command `get_save_data(action, filters)` in `src-tauri/src/lib.rs`.
-- [ ] Implement process execution that captures `stdout` as a single string and parses it as JSON.
+- [x] Create a new Rust command `query_save_data` in `src-tauri/src/lib.rs`.
+- [x] Implement process execution that captures `stdout` as a single string and parses it as JSON.
 
 ### Phase 3: React Integration
-- [ ] Create a `SaveDataContext` or `useSaveData` hook to manage data fetching and caching.
-- [ ] Implement the first viewer screen (e.g., "Owned Ships") using the new API.
+- [x] Create a `useSaveData` hook to manage data fetching and caching.
+- [x] Implement the first viewer screen (Savegame Overview) using the new API.
 - [ ] Add loading states and error handling for data retrieval.
 
 ### Phase 4: Deprecation

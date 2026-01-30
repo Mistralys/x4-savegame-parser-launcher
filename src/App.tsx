@@ -8,6 +8,7 @@ import { useError } from "./context/ErrorContext";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { SettingsView } from "./components/SettingsView";
 import { ToolView } from "./components/ToolView";
+import { SaveDataViewer } from "./components/SaveDataViewer";
 import { WindowControls } from "./components/WindowControls";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -176,7 +177,7 @@ function App() {
             {activeTab === "viewer" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('nav.viewer')}</h1>
-                <ToolView tool="viewer" />
+                <SaveDataViewer />
               </section>
             )}
           </div>
