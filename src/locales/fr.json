@@ -27,7 +27,14 @@
     "auto_backup": "Sauvegarde automatique activée",
     "keep_xml": "Conserver les fichiers XML",
     "tool_logging": "Activer les journaux de l'outil",
-    "load_from_config": "Charger depuis config.json"
+    "load_from_config": "Charger depuis config.json",
+    "config_section_title": "Fichier de configuration de l'outil",
+    "config_status": "Statut",
+    "config_exists": "Fichier de configuration trouvé",
+    "config_missing": "Fichier de configuration manquant",
+    "save_to_config": "Enregistrer dans config.json",
+    "config_save_success": "Configuration enregistrée avec succès",
+    "config_load_success": "Configuration chargée avec succès"
   },
   "tools": {
     "start": "Démarrer",
@@ -35,7 +42,16 @@
     "running": "En cours",
     "stopped": "Arrêté",
     "open_browser": "Ouvrir le navigateur",
-    "clear_logs": "Effacer les journaux"
+    "clear_logs": "Effacer les journaux",
+    "latest_save": "Dernière sauvegarde",
+    "events": {
+      "MONITOR_STARTED": "Moniteur démarré",
+      "SAVE_DETECTED": "Sauvegarde détectée",
+      "SAVE_PARSING_STARTED": "Analyse démarrée",
+      "SAVE_UNZIPPING": "Décompression de la sauvegarde...",
+      "SAVE_EXTRACTING": "Extraction des données...",
+      "SAVE_PARSING_COMPLETE": "Analyse terminée"
+    }
   },
   "errors": {
     "title": "Erreur",

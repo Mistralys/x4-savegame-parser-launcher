@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { exists } from '@tauri-apps/plugin-fs';
-import { Command } from '@tauri-apps/plugin-shell';
 import { useConfig, getToolPaths } from './ConfigContext';
 import { logger } from '../services/logger';
 

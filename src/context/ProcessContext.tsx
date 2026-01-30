@@ -25,6 +25,7 @@ interface MonitorMessage {
 interface ToolState {
   status: ToolStatus;
   logs: string[];
+  events: MonitorMessage[];
   currentEvent?: string;
   lastTick?: number;
   detectedSave?: { name: string; path: string };
@@ -47,6 +48,7 @@ interface ProcessContextType {
   startTool: (tool: string) => Promise<void>;
   stopTool: (tool: string) => Promise<void>;
   clearLogs: (tool: string) => void;
+  clearEvents: (tool: string) => void;
 }
 
 const ProcessContext = createContext<ProcessContextType | undefined>(undefined);
@@ -54,8 +56,8 @@ const ProcessContext = createContext<ProcessContextType | undefined>(undefined);
 export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { config } = useConfig();
   const [tools, setTools] = useState<Record<string, ToolState>>({
-    parser: { status: 'stopped', logs: [] },
-    viewer: { status: 'stopped', logs: [] },
+    parser: { status: 'stopped', logs: [], events: [] },
+    viewer: { status: 'stopped', logs: [], events: [] },
   });
 
   // Check initial status on mount
@@ -108,6 +110,12 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
                   updates.detectedSave = parsed.payload;
                 }
                 processedMessage = `[EVENT] ${parsed.name}${parsed.payload ? ': ' + JSON.stringify(parsed.payload) : ''}`;
+                
+                // Add to events history
+                updates.events = [
+                  { ...parsed, timestamp: parsed.timestamp || new Date().toISOString() },
+                  ...(toolState.events || [])
+                ].slice(0, 50);
                 break;
 
               case 'log':
@@ -122,6 +130,17 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
                   code: (parsed as any).code,
                   errors: (parsed as any).errors
                 };
+
+                // Add to events history
+                updates.events = [
+                  {
+                    type: 'error',
+                    message: parsed.message,
+                    level: 'error',
+                    timestamp: parsed.timestamp || new Date().toISOString()
+                  } as MonitorMessage,
+                  ...(toolState.events || [])
+                ].slice(0, 50);
                 // When a fatal error occurs, the process will exit shortly
                 break;
             }
@@ -179,8 +198,12 @@ export const ProcessProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTools(prev => ({ ...prev, [tool]: { ...prev[tool], logs: [] } }));
   }, []);
 
+  const clearEvents = useCallback((tool: string) => {
+    setTools(prev => ({ ...prev, [tool]: { ...prev[tool], events: [] } }));
+  }, []);
+
   return (
-    <ProcessContext.Provider value={{ tools, startTool, stopTool, clearLogs }}>
+    <ProcessContext.Provider value={{ tools, startTool, stopTool, clearLogs, clearEvents }}>
       {children}
     </ProcessContext.Provider>
   );

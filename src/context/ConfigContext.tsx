@@ -37,8 +37,12 @@ interface ConfigContextType {
   config: AppConfig;
   updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>;
   loadFromToolConfig: () => Promise<void>;
+  saveToToolConfig: () => Promise<void>;
+  checkToolConfigExists: () => Promise<boolean>;
   isLoading: boolean;
   hasToolConfigError: boolean;
+  toolConfigErrorMessage: string | null;
+  toolConfigExists: boolean;
 }
 
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
@@ -49,6 +53,8 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG);
   const [isLoading, setIsLoading] = useState(true);
   const [hasToolConfigError, setHasToolConfigError] = useState(false);
+  const [toolConfigErrorMessage, setToolConfigErrorMessage] = useState<string | null>(null);
+  const [toolConfigExists, setToolConfigExists] = useState(false);
   const { setLanguage } = useI18n();
 
   useEffect(() => {
@@ -91,49 +97,83 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     loadConfig();
   }, [setLanguage]);
 
-  const saveToToolConfig = useCallback(async (currentConfig: AppConfig) => {
-    if (!currentConfig.installPath) return;
+  const checkToolConfigExists = useCallback(async () => {
+    if (!config.installPath) {
+      setToolConfigExists(false);
+      return false;
+    }
+    try {
+      const normalizedPath = config.installPath.replace(/\\/g, '/').replace(/\/$/, '');
+      const exists = await invoke<boolean>('check_tool_config_exists', {
+        installPath: normalizedPath,
+      });
+      setToolConfigExists(exists);
+      return exists;
+    } catch (error) {
+      console.error('Failed to check tool config existence', error);
+      setToolConfigExists(false);
+      return false;
+    }
+  }, [config.installPath]);
 
+  useEffect(() => {
+    checkToolConfigExists();
+  }, [config.installPath, checkToolConfigExists]);
+
+  const saveToToolConfig = async () => {
+    if (!config.installPath) return;
+
+    const normalizedPath = config.installPath.replace(/\\/g, '/').replace(/\/$/, '');
     const toolConfig = {
-      gameFolder: currentConfig.gameFolderPath,
-      viewerHost: currentConfig.viewerHost,
-      viewerPort: currentConfig.viewerPort,
-      autoBackupEnabled: currentConfig.autoBackupEnabled,
-      keepXMLFiles: currentConfig.keepXMLFiles,
-      loggingEnabled: currentConfig.loggingEnabled,
+      gameFolder: config.gameFolderPath,
+      savesFolder: config.savegameFolderPath,
+      viewerHost: config.viewerHost,
+      viewerPort: config.viewerPort,
+      autoBackupEnabled: config.autoBackupEnabled,
+      keepXmlFiles: config.keepXMLFiles,
+      loggingEnabled: config.loggingEnabled,
     };
 
     try {
       await invoke('save_tool_config', {
         config: toolConfig,
-        installPath: currentConfig.installPath,
+        installPath: normalizedPath,
       });
       setHasToolConfigError(false);
+      setToolConfigErrorMessage(null);
+      await checkToolConfigExists();
     } catch (error) {
       console.error('Failed to save tool config', error);
       setHasToolConfigError(true);
-      // We don't throw here to avoid blocking the main UI settings save
+      setToolConfigErrorMessage(String(error));
+      throw error;
     }
-  }, []);
+  };
 
   const loadFromToolConfig = async () => {
     if (!config.installPath) return;
 
     try {
+      const normalizedPath = config.installPath.replace(/\\/g, '/').replace(/\/$/, '');
       const toolConfig = await invoke<any>('load_tool_config', {
-        installPath: config.installPath,
+        installPath: normalizedPath,
       });
 
       await updateConfig({
         gameFolderPath: toolConfig.gameFolder,
+        savegameFolderPath: toolConfig.savesFolder,
         viewerHost: toolConfig.viewerHost,
         viewerPort: toolConfig.viewerPort,
         autoBackupEnabled: toolConfig.autoBackupEnabled,
-        keepXMLFiles: toolConfig.keepXMLFiles,
+        keepXMLFiles: toolConfig.keepXmlFiles,
         loggingEnabled: toolConfig.loggingEnabled,
       });
+      setHasToolConfigError(false);
+      setToolConfigErrorMessage(null);
     } catch (error) {
       console.error('Failed to load tool config', error);
+      setHasToolConfigError(true);
+      setToolConfigErrorMessage(String(error));
       throw error;
     }
   };
@@ -153,25 +193,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       await store.set('config', updated);
       await store.save();
-
-      // Check if any tool-relevant settings changed
-      const toolFields: (keyof AppConfig)[] = [
-        'gameFolderPath',
-        'viewerHost',
-        'viewerPort',
-        'autoBackupEnabled',
-        'keepXMLFiles',
-        'loggingEnabled',
-        'installPath'
-      ];
-
-      const hasToolChanges = Object.keys(newConfig).some(key =>
-        toolFields.includes(key as keyof AppConfig)
-      );
-
-      if (hasToolChanges) {
-        await saveToToolConfig(updated);
-      }
     } catch (error) {
       console.error('Failed to save config', error);
     }
@@ -182,8 +203,12 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       config,
       updateConfig,
       loadFromToolConfig,
+      saveToToolConfig,
+      checkToolConfigExists,
       isLoading,
-      hasToolConfigError
+      hasToolConfigError,
+      toolConfigErrorMessage,
+      toolConfigExists
     }}>
       {children}
     </ConfigContext.Provider>

@@ -14,6 +14,7 @@
 - `async fn open_log_dir(app: AppHandle) -> Result<(), String>`
 - `async fn save_tool_config(config: ToolConfig, install_path: String) -> Result<(), String>`
 - `async fn load_tool_config(install_path: String) -> Result<ToolConfig, String>`
+- `async fn check_tool_config_exists(install_path: String) -> Result<bool, String>`
 
 #### Models
 ```rust
@@ -24,8 +25,10 @@ struct SystemInfo {
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct ToolConfig {
     game_folder: String,
+    saves_folder: String,
     viewer_host: String,
     viewer_port: u16,
     auto_backup_enabled: bool,
@@ -48,11 +51,11 @@ struct ToolConfig {
 
 #### `ConfigContext.tsx`
 - `interface AppConfig { phpPath, gameFolderPath, savegameFolderPath, installPath, viewerHost, viewerPort, language, autoBackupEnabled, keepXMLFiles, loggingEnabled }`
-- `useConfig(): { config: AppConfig, updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>, loadFromToolConfig: () => Promise<void>, isLoading: boolean, hasToolConfigError: boolean }`
+- `useConfig(): { config: AppConfig, updateConfig: (newConfig: Partial<AppConfig>) => Promise<void>, loadFromToolConfig: () => Promise<void>, saveToToolConfig: () => Promise<void>, checkToolConfigExists: () => Promise<boolean>, isLoading: boolean, hasToolConfigError: boolean, toolConfigErrorMessage: string | null, toolConfigExists: boolean }`
 
 #### `ProcessContext.tsx`
 - `type ToolStatus = 'running' | 'stopped' | 'starting' | 'stopping'`
-- `useProcess(): { tools: Record<string, ToolState>, startTool: (tool: string) => Promise<void>, stopTool: (tool: string) => Promise<void>, clearLogs: (tool: string) => void }`
+- `useProcess(): { tools: Record<string, ToolState>, startTool: (tool: string) => Promise<void>, stopTool: (tool: string) => Promise<void>, clearLogs: (tool: string) => void, clearEvents: (tool: string) => void }`
 
 #### `I18nContext.tsx`
 - `type Language = 'en' | 'fr' | 'de'`

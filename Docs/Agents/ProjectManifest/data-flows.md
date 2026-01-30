@@ -15,21 +15,22 @@
 6. **Display:** `LogViewer` renders the logs from the context.
 
 ## NDJSON Structured Communication
-1. **Protocol:** The monitor is invoked with the `--json` flag, emitting NDJSON to `stdout`.
+1. **Protocol:** The monitor is automatically invoked with the `--json` flag by the Rust backend, emitting NDJSON to `stdout`.
 2. **Parsing:** `ProcessContext` monitors the stream and attempts to parse lines starting with `{`.
 3. **State Updates:**
-   - `tick`: Updates `lastTick` for heartbeat visualization.
-   - `event`: Updates `currentEvent` (e.g., `SAVE_UNZIPPING`) and `detectedSave`.
-   - `log`: Formats logs using provided `level` and `message`.
-   - `error`: Formats as `[ERROR]` and adds to log history.
-4. **UI Response:** `ToolView` reacts to these state changes by displaying progress labels and savegame information.
+   - `tick`: Updates `lastTick` for heartbeat visualization. Ticks are not added to the log history.
+   - `event`: Updates `currentEvent` (e.g., `SAVE_UNZIPPING`), `version`, and `detectedSave`. Events are added to both logs and a dedicated `events` history.
+   - `log`: Formats logs using the provided `level` and `message`.
+   - `error`: Populates the `error` state with a full exception chain (message, code, class, trace) and adds the fatal error to the log history.
+4. **UI Response:** `ToolView` reacts to these state changes by displaying progress labels, savegame information, and error diagnostics.
 
 ## Configuration Persistence
 1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
-2. **Updating:** `updateConfig` updates the React state and immediately saves to the persistent store.
-3. **Tool Sync:** Changes to tool-relevant settings automatically trigger `save_tool_config` to update the tool's `config.json`.
-4. **Manual Import:** Users can manually trigger `load_tool_config` via the UI to import settings from an existing `config.json`.
-5. **Auto-Detection:** On first run (or if set to 'auto'), system language is detected and applied.
+2. **Migration:** On load, the legacy `viewerUrl` is automatically migrated to `viewerHost` and `viewerPort`.
+3. **Updating:** `updateConfig` updates the React state and immediately saves to the persistent store.
+4. **Tool Sync:** Users can manually trigger `save_tool_config` via the UI to sync settings to the tool's internal `config.json`.
+5. **Manual Import:** Users can manually trigger `load_tool_config` via the UI to import settings from an existing `config.json`.
+6. **Auto-Detection:** On first run (or if set to 'auto'), system language is detected and applied.
 
 ## Environment Validation
 1. **Trigger:** Validation runs on mount and every 5 seconds (periodic check).

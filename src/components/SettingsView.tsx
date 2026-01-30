@@ -3,14 +3,23 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useConfig, AppConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
-import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2 } from 'lucide-react';
+import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { logger } from '../services/logger';
 
 export const SettingsView: React.FC = () => {
-  const { config, updateConfig, loadFromToolConfig } = useConfig();
+  const { config, updateConfig, loadFromToolConfig, saveToToolConfig, toolConfigExists } = useConfig();
   const { t, availableLanguages } = useI18n();
   const { validation } = useValidation();
   const [isImporting, setIsImporting] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [feedback, setFeedback] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  React.useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
 
   const pickFolder = async (key: keyof AppConfig) => {
     const selected = await open({
@@ -65,25 +74,6 @@ export const SettingsView: React.FC = () => {
               <Terminal className="mr-2 text-blue-500" size={20} />
               Environment & Tools
             </h3>
-            {config.installPath && (
-              <button
-                onClick={async () => {
-                  setIsImporting(true);
-                  try {
-                    await loadFromToolConfig();
-                  } catch (e) {
-                    // Error handled in context
-                  } finally {
-                    setIsImporting(false);
-                  }
-                }}
-                disabled={isImporting}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-lg transition-colors disabled:opacity-50"
-              >
-                {isImporting ? <Loader2 size={14} className="animate-spin" /> : <FileJson size={14} />}
-                {t('settings.load_from_config')}
-              </button>
-            )}
           </div>
 
           <PathInput
@@ -217,6 +207,89 @@ export const SettingsView: React.FC = () => {
               />
             </div>
           </div>
+        </div>
+
+        {/* Configuration File Section */}
+        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold flex items-center">
+              <FileJson className="mr-2 text-blue-500" size={20} />
+              {t('settings.config_section_title')}
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {t('settings.config_status')}:
+              </span>
+              {toolConfigExists ? (
+                <span className="flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
+                  <CheckCircle2 size={12} />
+                  {t('settings.config_exists')}
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-1 rounded-full">
+                  <AlertCircle size={12} />
+                  {t('settings.config_missing')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={async () => {
+                setIsImporting(true);
+                try {
+                  await loadFromToolConfig();
+                  setFeedback({ type: 'success', message: t('settings.config_load_success') });
+                } catch (e) {
+                  setFeedback({ type: 'error', message: 'Failed to save configuration' });
+                } finally {
+                  setIsImporting(false);
+                }
+              }}
+              disabled={isImporting || !toolConfigExists}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 rounded-xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isImporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+              {t('settings.load_from_config')}
+            </button>
+
+            <button
+              onClick={async () => {
+                setIsSaving(true);
+                try {
+                  await saveToToolConfig();
+                  setFeedback({ type: 'success', message: t('settings.config_save_success') });
+                } catch (e) {
+                  setFeedback({ type: 'error', message: 'Failed to save configuration' });
+                } finally {
+                  setIsSaving(false);
+                }
+              }}
+              disabled={isSaving || !validation.isValid || !config.installPath}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+            >
+              {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+              {t('settings.save_to_config')}
+            </button>
+          </div>
+
+          {feedback && (
+            <div className={`p-3 rounded-xl flex items-center gap-2 text-sm font-bold animate-in fade-in slide-in-from-top-2 ${
+              feedback.type === 'success'
+                ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
+                : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'
+            }`}>
+              {feedback.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {feedback.message}
+            </div>
+          )}
+          
+          {!validation.isValid && config.installPath && (
+            <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+              * {t('errors.fix_settings')}
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -6,13 +6,15 @@ import { AlertTriangle } from 'lucide-react';
 
 export const ErrorBanner: React.FC = () => {
   const { validation } = useValidation();
-  const { hasToolConfigError } = useConfig();
+  const { hasToolConfigError, toolConfigErrorMessage } = useConfig();
   const { t } = useI18n();
 
   if (validation.isValid && !hasToolConfigError) return null;
 
   const title = !validation.isValid ? t('errors.invalid_config') : t('errors.title');
-  const message = !validation.isValid ? t('errors.fix_settings') : t('errors.config_write_failed');
+  const message = !validation.isValid
+    ? t('errors.fix_settings')
+    : (toolConfigErrorMessage || t('errors.config_write_failed'));
 
   return (
     <div className="bg-red-500/10 border-b border-red-500/20 px-6 py-3 animate-in slide-in-from-top duration-300">

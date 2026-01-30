@@ -5,7 +5,6 @@ import { Layout, Home, Settings, Info, Command, AlertCircle, Activity } from "lu
 import { useI18n } from "./context/I18nContext";
 import { useConfig } from "./context/ConfigContext";
 import { useError } from "./context/ErrorContext";
-import { useValidation } from "./context/ValidationContext";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { SettingsView } from "./components/SettingsView";
 import { ToolView } from "./components/ToolView";
@@ -32,13 +31,10 @@ function App() {
   
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     invoke<SystemInfo>("get_system_info")
       .then(setSystemInfo)
       .catch((err) => {
-        setError(String(err));
         showError(t('errors.title'), "Failed to get system info", String(err));
       });
   }, [showError, t]);

@@ -19,4 +19,4 @@ This directory contains the "Source of Truth" for the X4 Savegame Monitor & Laun
 
 ---
 
-*Last Updated: 2026-01-29*
+*Last Updated: 2026-01-30*

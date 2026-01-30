@@ -169,7 +169,7 @@ Emitted when a fatal exception occurs during monitor execution.
 1. **During startup**: Caught by the wrapper script before the event loop starts
 2. **During runtime**: Caught within the event loop (e.g., during save processing)
 
-In both cases, an error message will be sent before the process terminates.
+In both cases, an error message will be sent before the process terminates. The launcher UI uses the `errors` array to display a detailed diagnostic trace to the user.
 
 #### Error Structure
 

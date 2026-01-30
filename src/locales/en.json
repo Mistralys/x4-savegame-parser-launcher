@@ -27,7 +27,14 @@
     "auto_backup": "Auto Backup Enabled",
     "keep_xml": "Keep XML Files",
     "tool_logging": "Enable Tool Logging",
-    "load_from_config": "Load from config.json"
+    "load_from_config": "Load from config.json",
+    "config_section_title": "Tool Configuration File",
+    "config_status": "Status",
+    "config_exists": "Configuration file found",
+    "config_missing": "Configuration file missing",
+    "save_to_config": "Save to config.json",
+    "config_save_success": "Configuration saved successfully",
+    "config_load_success": "Configuration loaded successfully"
   },
   "tools": {
     "start": "Start",

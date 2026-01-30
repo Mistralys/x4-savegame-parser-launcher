@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Play, Square, Trash2, ExternalLink, Activity, FileText, AlertCircle, ChevronDown, ChevronRight } from 'lucide-react';
-import { useProcess, ToolStatus } from '../context/ProcessContext';
+import { Play, Square, Trash2, ExternalLink, Activity, FileText, AlertCircle, ChevronDown, ChevronRight, Info, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { useProcess } from '../context/ProcessContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
 import { useConfig } from '../context/ConfigContext';
@@ -12,8 +12,31 @@ interface ToolViewProps {
   tool: 'parser' | 'viewer';
 }
 
+const RelativeTime: React.FC<{ timestamp: string }> = ({ timestamp }) => {
+  const [timeAgo, setTimeAgo] = useState('');
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      const then = new Date(timestamp);
+      const diff = Math.floor((now.getTime() - then.getTime()) / 1000);
+
+      if (diff < 5) setTimeAgo('just now');
+      else if (diff < 60) setTimeAgo(`${diff}s ago`);
+      else if (diff < 3600) setTimeAgo(`${Math.floor(diff / 60)}m ago`);
+      else setTimeAgo(`${Math.floor(diff / 3600)}h ago`);
+    };
+
+    update();
+    const timer = setInterval(update, 10000);
+    return () => clearInterval(timer);
+  }, [timestamp]);
+
+  return <span>{timeAgo}</span>;
+};
+
 export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
-  const { tools, startTool, stopTool, clearLogs } = useProcess();
+  const { tools, startTool, stopTool, clearLogs, clearEvents } = useProcess();
   const { t } = useI18n();
   const { validation } = useValidation();
   const { config } = useConfig();
@@ -22,6 +45,14 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
   const isRunning = state.status === 'running';
   const isTransitioning = state.status === 'starting' || state.status === 'stopping';
   const [pulse, setPulse] = useState(false);
+  const [isTerminalCollapsed, setIsTerminalCollapsed] = useState(true);
+
+  // Auto-expand terminal on error
+  useEffect(() => {
+    if (state.error && isTerminalCollapsed) {
+      setIsTerminalCollapsed(false);
+    }
+  }, [state.error]);
 
   // Pulse effect when a new tick or event arrives
   useEffect(() => {
@@ -111,28 +142,34 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
           </button>
         </div>
   
-        {/* Structured Info (Parser only) */}
-        {tool === 'parser' && isRunning && state.detectedSave && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-                <FileText size={20} />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-blue-500/50 uppercase tracking-wider">{t('tools.latest_save')}</p>
-                <p className="text-sm font-mono font-bold text-gray-700 dark:text-gray-300 truncate max-w-[200px]" title={state.detectedSave.path}>
-                  {state.detectedSave.name}
-                </p>
-              </div>
-            </div>
-            
-            {state.currentEvent && (
-              <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-green-500/10 text-green-500">
-                  <Activity size={20} />
+      </div>
+
+      {/* Info Section (Badges & Events) */}
+      {(isRunning || (state.events && state.events.length > 0)) && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
+          {/* Status Badges */}
+          <div className="lg:col-span-1 space-y-4">
+            {tool === 'parser' && state.detectedSave && (
+              <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500">
+                  <FileText size={24} />
                 </div>
-                <div>
-                  <p className="text-[10px] font-bold text-green-500/50 uppercase tracking-wider">Current Activity</p>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold text-blue-500/50 uppercase tracking-wider mb-0.5">{t('tools.latest_save')}</p>
+                  <p className="text-sm font-mono font-bold text-gray-700 dark:text-gray-300 truncate" title={state.detectedSave.path}>
+                    {state.detectedSave.name}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {state.currentEvent && (
+              <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-green-500/10 text-green-500">
+                  <Activity size={24} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold text-green-500/50 uppercase tracking-wider mb-0.5">Current Activity</p>
                   <p className="text-sm font-bold text-gray-700 dark:text-gray-300">
                     {t(`tools.events.${state.currentEvent}`)}
                   </p>
@@ -140,8 +177,57 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
               </div>
             )}
           </div>
-        )}
-      </div>
+
+          {/* Recent Events List */}
+          <div className="lg:col-span-2 p-6 rounded-2xl bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <Clock size={14} />
+                Recent Events
+              </div>
+              <button
+                onClick={() => clearEvents(tool)}
+                className="text-[10px] font-bold text-gray-400 hover:text-red-500 transition-colors uppercase tracking-widest"
+              >
+                Clear History
+              </button>
+            </div>
+
+            <div className="space-y-3 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+              {state.events && state.events.length > 0 ? (
+                state.events.map((ev, idx) => (
+                  <div key={idx} className="flex items-start gap-3 group animate-in fade-in slide-in-from-left-2 duration-300">
+                    <div className={`mt-0.5 p-1 rounded-md ${
+                      ev.type === 'error' ? 'bg-red-500/10 text-red-500' :
+                      ev.name?.includes('COMPLETE') ? 'bg-green-500/10 text-green-500' :
+                      'bg-blue-500/10 text-blue-500'
+                    }`}>
+                      {ev.type === 'error' ? <XCircle size={12} /> :
+                       ev.name?.includes('COMPLETE') ? <CheckCircle2 size={12} /> :
+                       <Info size={12} />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-bold text-gray-700 dark:text-gray-300">
+                          {ev.type === 'error' ? ev.message : (ev.name ? t(`tools.events.${ev.name}`) : ev.message)}
+                        </p>
+                        <span className="text-[9px] font-medium text-gray-400 whitespace-nowrap">
+                          {ev.timestamp && <RelativeTime timestamp={ev.timestamp} />}
+                        </span>
+                      </div>
+                      {ev.payload && ev.name === 'SAVE_DETECTED' && (
+                        <p className="text-[10px] text-gray-500 font-mono mt-0.5 truncate">{ev.payload.name}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-gray-400 italic py-2">No recent events</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Error Details */}
       {state.error && (
@@ -171,12 +257,27 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
       )}
 
       {/* Log Output */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-2">
-          <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Terminal Output</label>
-          <span className="text-[10px] text-gray-400 font-mono">{state.logs.length} lines buffered</span>
-        </div>
-        <LogViewer logs={state.logs} />
+      <div className="space-y-4">
+        <button
+          onClick={() => setIsTerminalCollapsed(!isTerminalCollapsed)}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors group"
+        >
+          <div className="flex items-center gap-3">
+            <div className={`p-1.5 rounded-lg transition-colors ${isTerminalCollapsed ? 'bg-gray-200 dark:bg-gray-700 text-gray-500' : 'bg-blue-500/10 text-blue-500'}`}>
+              {isTerminalCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+            </div>
+            <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer">Terminal Output</label>
+          </div>
+          <span className="text-[10px] text-gray-400 font-mono group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors">
+            {state.logs.length} lines buffered
+          </span>
+        </button>
+        
+        {!isTerminalCollapsed && (
+          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+            <LogViewer logs={state.logs} />
+          </div>
+        )}
       </div>
     </div>
   );

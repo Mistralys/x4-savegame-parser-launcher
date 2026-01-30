@@ -27,7 +27,14 @@
     "auto_backup": "Auto-Backup aktiviert",
     "keep_xml": "XML-Dateien behalten",
     "tool_logging": "Tool-Logging aktivieren",
-    "load_from_config": "Aus config.json laden"
+    "load_from_config": "Aus config.json laden",
+    "config_section_title": "Tool-Konfigurationsdatei",
+    "config_status": "Status",
+    "config_exists": "Konfigurationsdatei gefunden",
+    "config_missing": "Konfigurationsdatei fehlt",
+    "save_to_config": "In config.json speichern",
+    "config_save_success": "Konfiguration erfolgreich gespeichert",
+    "config_load_success": "Konfiguration erfolgreich geladen"
   },
   "tools": {
     "start": "Starten",
@@ -35,7 +42,16 @@
     "running": "Läuft",
     "stopped": "Angehalten",
     "open_browser": "Browser öffnen",
-    "clear_logs": "Logs löschen"
+    "clear_logs": "Logs löschen",
+    "latest_save": "Letzter Spielstand",
+    "events": {
+      "MONITOR_STARTED": "Monitor gestartet",
+      "SAVE_DETECTED": "Spielstand erkannt",
+      "SAVE_PARSING_STARTED": "Analyse gestartet",
+      "SAVE_UNZIPPING": "Spielstand wird entpackt...",
+      "SAVE_EXTRACTING": "Daten werden extrahiert...",
+      "SAVE_PARSING_COMPLETE": "Analyse abgeschlossen"
+    }
   },
   "errors": {
     "title": "Fehler",
@@ -43,6 +59,6 @@
     "fix_settings": "Bitte überprüfen Sie Ihre Einstellungen. Einige Pfade sind ungültig oder fehlen.",
     "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details.",
     "path_invalid": "Ungültiger Pfad oder Zugriff verweigert",
-    "config_write_failed": "Tool-config.json konnte nicht aktualisiert werden. Bitte Berechtigungen prüfen."
+    "config_write_failed": "config.json konnte nicht aktualisiert werden. Bitte Berechtigungen prüfen."
   }
 }

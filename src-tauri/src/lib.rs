@@ -16,6 +16,7 @@ struct SystemInfo {
 #[serde(rename_all = "camelCase")]
 struct ToolConfig {
     game_folder: String,
+    saves_folder: String,
     viewer_host: String,
     viewer_port: u16,
     auto_backup_enabled: bool,
@@ -103,9 +104,17 @@ async fn open_log_dir(app: AppHandle) -> Result<(), String> {
 
 #[tauri::command]
 async fn save_tool_config(config: ToolConfig, install_path: String) -> Result<(), String> {
-    let path = std::path::Path::new(&install_path).join("config.json");
+    let install_path = install_path.trim();
+    let path = std::path::Path::new(install_path).join("config.json");
+    
+    if let Some(parent) = path.parent() {
+        if !parent.exists() {
+            return Err(format!("Installation directory does not exist: {}", install_path));
+        }
+    }
+
     let content = serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?;
-    std::fs::write(path, content).map_err(|e| e.to_string())?;
+    std::fs::write(&path, content).map_err(|e| format!("Failed to write config.json: {}", e))?;
     Ok(())
 }
 
@@ -118,6 +127,12 @@ async fn load_tool_config(install_path: String) -> Result<ToolConfig, String> {
     let content = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
     let config: ToolConfig = serde_json::from_str(&content).map_err(|e| e.to_string())?;
     Ok(config)
+}
+
+#[tauri::command]
+async fn check_tool_config_exists(install_path: String) -> Result<bool, String> {
+    let path = std::path::Path::new(&install_path).join("config.json");
+    Ok(path.exists())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -139,7 +154,8 @@ pub fn run() {
             is_tool_running,
             open_log_dir,
             save_tool_config,
-            load_tool_config
+            load_tool_config,
+            check_tool_config_exists
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?
