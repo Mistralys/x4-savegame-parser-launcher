@@ -7,6 +7,7 @@ import { ConfigProvider } from './context/ConfigContext';
 import { ErrorProvider } from './context/ErrorContext';
 import { ValidationProvider } from './context/ValidationContext';
 import { ProcessProvider } from './context/ProcessContext';
+import { NotificationProvider } from './context/NotificationContext';
 import './App.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <ValidationProvider>
             <ProcessProvider>
               <ErrorProvider>
-                <App />
+                <NotificationProvider>
+                  <App />
+                </NotificationProvider>
               </ErrorProvider>
             </ProcessProvider>
           </ValidationProvider>

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { Layout, Home, Settings, Info, Command, AlertCircle, Activity } from "lucide-react";
 import { useI18n } from "./context/I18nContext";
 import { useConfig } from "./context/ConfigContext";
 import { useError } from "./context/ErrorContext";
+import { useNotification } from "./context/NotificationContext";
+import { useProcess } from "./context/ProcessContext";
 import { ErrorBanner } from "./components/ErrorBanner";
 import { SettingsView } from "./components/SettingsView";
 import { ToolView } from "./components/ToolView";
@@ -29,6 +31,8 @@ function App() {
   const { t } = useI18n();
   const { config, isLoading: configLoading } = useConfig();
   const { showError } = useError();
+  const { showNotification } = useNotification();
+  const { tools } = useProcess();
   
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
@@ -39,6 +43,27 @@ function App() {
         showError(t('errors.title'), "Failed to get system info", String(err));
       });
   }, [showError, t]);
+
+  // Global listener for monitor events
+  const lastEventRef = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    const currentEvent = tools.parser.currentEvent;
+    if (currentEvent === 'SAVE_PARSING_COMPLETE' && lastEventRef.current !== 'SAVE_PARSING_COMPLETE') {
+      const latestEvent = tools.parser.events[0];
+      const duration = latestEvent?.payload?.extractionDurationFormatted;
+      const saveName = latestEvent?.payload?.saveName;
+      
+      let message = 'A savegame has been successfully extracted and is ready for viewing.';
+      if (saveName && duration) {
+        message = `"${saveName}" has been successfully extracted in ${duration}.`;
+      } else if (saveName) {
+        message = `"${saveName}" has been successfully extracted.`;
+      }
+
+      showNotification('success', t('tools.events.SAVE_PARSING_COMPLETE') || 'Extraction Complete', message);
+    }
+    lastEventRef.current = currentEvent;
+  }, [tools.parser.currentEvent, tools.parser.events, showNotification, t]);
 
   if (configLoading) {
     return (

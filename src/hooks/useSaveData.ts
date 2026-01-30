@@ -82,8 +82,19 @@ export const useSaveData = () => {
     }
   }, [config]);
 
+  const queueExtraction = useCallback(async (saveId: string) => {
+    return query(saveId, 'queue-extraction');
+  }, [query]);
+
+  const getExtractionQueue = useCallback(async () => {
+    const response = await query<{ queue: string[], count: number }>('', 'queue-extraction', { filter: '--list' });
+    return response.data;
+  }, [query]);
+
   return {
     query,
+    queueExtraction,
+    getExtractionQueue,
     isLoading,
     error,
   };

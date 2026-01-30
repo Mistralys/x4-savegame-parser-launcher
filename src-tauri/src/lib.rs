@@ -184,9 +184,13 @@ async fn query_save_data(
 
     let output = cmd.output().await.map_err(|e| e.to_string())?;
     let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+
+    if !stderr.is_empty() {
+        eprintln!("CLI STDERR: {}", stderr);
+    }
     
     if stdout.trim().is_empty() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
         return Err(format!("Command returned empty output. Stderr: {}", stderr));
     }
 

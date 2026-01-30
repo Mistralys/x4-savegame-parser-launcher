@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
 import { useI18n } from '../context/I18nContext';
-import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database } from 'lucide-react';
+import { useProcess } from '../context/ProcessContext';
+import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database, Zap } from 'lucide-react';
 import { SaveSelector } from './SaveSelector';
 
 interface SaveInfo {
@@ -13,10 +14,13 @@ interface SaveInfo {
   gameStartTime: number;
   gameGUID: string;
   gameCode: number;
+  extractionDurationSeconds?: number;
+  extractionDurationFormatted?: string;
 }
 
 export const SaveDataViewer: React.FC = () => {
   const { query, isLoading, error } = useSaveData();
+  const { tools } = useProcess();
   const { t } = useI18n();
   const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
   const [saveInfo, setSaveInfo] = useState<SaveInfo | null>(null);
@@ -36,6 +40,8 @@ export const SaveDataViewer: React.FC = () => {
       fetchSaveInfo(selectedSaveId);
     }
   }, [selectedSaveId, fetchSaveInfo]);
+
+  const isMonitorRunning = tools.parser.status === 'running';
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -65,6 +71,20 @@ export const SaveDataViewer: React.FC = () => {
             </button>
           )}
         </div>
+
+        {selectedSaveId && !saveInfo && !isLoading && !isMonitorRunning && (
+          <div className="p-4 rounded-2xl bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/50 flex gap-4 animate-in slide-in-from-top-4 duration-300">
+             <div className="p-2 rounded-xl bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 h-fit">
+                <ShieldCheck size={20} />
+             </div>
+             <div>
+                <h4 className="text-sm font-bold text-yellow-800 dark:text-yellow-400">Save not extracted</h4>
+                <p className="text-xs text-yellow-700 dark:text-yellow-500/80 mt-0.5">
+                  This savegame has not been processed yet. Start the Parser tool to begin extraction.
+                </p>
+             </div>
+          </div>
+        )}
 
         {!selectedSaveId ? (
           <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl border-2 border-dashed border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/20">
@@ -125,6 +145,13 @@ export const SaveDataViewer: React.FC = () => {
               label="Game Code"
               value={saveInfo.gameCode.toString()}
             />
+            {saveInfo.extractionDurationFormatted && (
+              <InfoCard
+                icon={<Zap className="text-yellow-400" size={20} />}
+                label="Extraction Time"
+                value={saveInfo.extractionDurationFormatted}
+              />
+            )}
           </div>
         )}
       </div>
