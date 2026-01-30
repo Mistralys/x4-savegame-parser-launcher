@@ -138,7 +138,7 @@ function App() {
         </header>
 
         <div className="flex-1 overflow-y-auto p-8 relative z-0">
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className={cn("mx-auto space-y-8", activeTab === "viewer" ? "max-w-6xl" : "max-w-3xl")}>
             {activeTab === "home" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <h1 className="text-3xl font-extrabold tracking-tight mb-2">{t('app.title')}</h1>
