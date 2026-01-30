@@ -368,9 +368,15 @@ bin/query save-info --save=quicksave
   "moneyFormatted": "152,345.67 Cr",
   "saveDate": "2026-01-30T14:23:45+00:00",
   "gameStartTime": 1234567.89,
-  "location": "Argon Prime"
+  "location": "Argon Prime",
+  "extractionDuration": 135.42,
+  "extractionDurationFormatted": "2m 15s"
 }
 ```
+
+**Field Notes**:
+- `extractionDuration`: Time in seconds (float) that the extraction process took. Returns `null` for saves extracted before this feature was added.
+- `extractionDurationFormatted`: Human-readable duration (e.g., "2m 15s", "1h 23m 45s"). Returns `null` for legacy saves.
 
 ---
 
@@ -490,9 +496,15 @@ bin/query queue-extraction --clear
 
 **Flags**:
 - `--save`: Single save to queue (name or ID)
-- `--saves`: Space-separated list of saves to queue
+- `--saves`: Space-separated list of saves to queue (names or IDs)
 - `--list`: Display current queue contents
 - `--clear`: Clear all queued saves
+
+**Important Notes**:
+- Accepts both save **names** (e.g., `autosave_01`) and **IDs** (e.g., `53b0c253` from `list-saves`)
+- Can queue **unextracted** saves - this is the primary use case
+- Non-existent saves are skipped with a warning in the response
+- Duplicate saves are automatically prevented
 
 **How It Works**:
 1. Saves are added to a persistent queue file (`extraction-queue.json` in storage folder)
@@ -501,7 +513,7 @@ bin/query queue-extraction --clear
 4. Already-extracted saves are skipped automatically
 5. Non-existent saves are removed from queue automatically
 
-**Queue Response**:
+**Queue Response** (all saves valid):
 ```json
 {
   "success": true,
@@ -511,6 +523,22 @@ bin/query queue-extraction --clear
     "count": 2,
     "message": "Queued 2 saves for extraction",
     "totalInQueue": 5
+  }
+}
+```
+
+**Queue Response** (with skipped saves):
+```json
+{
+  "success": true,
+  "command": "queue-extraction",
+  "data": {
+    "queued": ["autosave_01", "autosave_02"],
+    "count": 2,
+    "message": "Queued 2 saves for extraction",
+    "totalInQueue": 5,
+    "skipped": ["nonexistent"],
+    "warning": "1 save not found and skipped"
   }
 }
 ```
@@ -529,19 +557,30 @@ bin/query queue-extraction --clear
 
 **Use Case Example**:
 ```bash
-# 1. List available saves
+# 1. List available saves (get IDs)
 bin/query list-saves
 
-# 2. Queue the saves you want extracted
-bin/query queue-extraction --saves="autosave_01 autosave_02 autosave_03"
+# Output shows:
+# {
+#   "data": {
+#     "main": [
+#       {"id": "53b0c253", "name": "autosave_02", "isUnpacked": false},
+#       {"id": "3d62bff6", "name": "autosave_01", "isUnpacked": false}
+#     ]
+#   }
+# }
+
+# 2. Queue saves using IDs or names (both work!)
+bin/query queue-extraction --saves="53b0c253 3d62bff6"
+# OR using names:
+bin/query queue-extraction --saves="autosave_02 autosave_01"
 
 # 3. Start the monitor (or it's already running)
 bin/run-monitor
 
 # Monitor will process:
-# > Processing queued save [autosave_01]...
-# > Processing queued save [autosave_02]...
-# > Processing queued save [autosave_03]...
+# > Processing queued save [53b0c253]...
+# > Processing queued save [3d62bff6]...
 # > Queue empty, monitoring for new saves.
 ```
 
