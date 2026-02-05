@@ -8,7 +8,7 @@
   },
   "nav": {
     "home": "Startseite",
-    "parser": "Parser",
+    "monitor": "Monitor",
     "viewer": "Viewer",
     "settings": "Einstellungen"
   },
@@ -47,10 +47,10 @@
     "events": {
       "MONITOR_STARTED": "Monitor gestartet",
       "SAVE_DETECTED": "Spielstand erkannt",
-      "SAVE_PARSING_STARTED": "Analyse gestartet",
+      "SAVE_PARSING_STARTED": "Überwachung gestartet",
       "SAVE_UNZIPPING": "Spielstand wird entpackt...",
       "SAVE_EXTRACTING": "Daten werden extrahiert...",
-      "SAVE_PARSING_COMPLETE": "Analyse abgeschlossen"
+      "SAVE_PARSING_COMPLETE": "Überwachung abgeschlossen"
     }
   },
   "errors": {

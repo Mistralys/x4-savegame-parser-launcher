@@ -3,8 +3,9 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useConfig, AppConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
-import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2, CheckCircle2, AlertCircle, Palette } from 'lucide-react';
 import { logger } from '../services/logger';
+import { ThemeToggle } from './ThemeToggle';
 
 export const SettingsView: React.FC = () => {
   const { config, updateConfig, loadFromToolConfig, saveToToolConfig, toolConfigExists } = useConfig();
@@ -47,24 +48,38 @@ export const SettingsView: React.FC = () => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="grid grid-cols-1 gap-6">
-        {/* Language Selection */}
-        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
-          <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
-            <Languages className="mr-2 text-blue-500" size={18} />
-            {t('settings.language')}
-          </label>
-          <select
-            value={config.language}
-            onChange={(e) => updateConfig({ language: e.target.value as any })}
-            className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-          >
-            <option value="auto">System Default</option>
-            {availableLanguages.map((lang) => (
-              <option key={lang.code} value={lang.code}>
-                {lang.name}
-              </option>
-            ))}
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Language Selection */}
+          <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
+              <Languages className="mr-2 text-blue-500" size={18} />
+              {t('settings.language')}
+            </label>
+            <select
+              value={config.language}
+              onChange={(e) => updateConfig({ language: e.target.value as any })}
+              className="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            >
+              <option value="auto">System Default</option>
+              {availableLanguages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Theme Selection */}
+          <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
+            <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
+              <Palette className="mr-2 text-blue-500" size={18} />
+              Appearance
+            </label>
+            <div className="flex items-center justify-between bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2">
+               <span className="text-sm font-medium text-gray-500">Switch Theme</span>
+               <ThemeToggle />
+            </div>
+          </div>
         </div>
 
         {/* Path Settings */}

@@ -8,7 +8,7 @@
   },
   "nav": {
     "home": "Home",
-    "parser": "Parser",
+    "monitor": "Monitor",
     "viewer": "Viewer",
     "settings": "Settings"
   },
@@ -47,10 +47,10 @@
     "events": {
       "MONITOR_STARTED": "Monitor Started",
       "SAVE_DETECTED": "Save Detected",
-      "SAVE_PARSING_STARTED": "Parsing Started",
+      "SAVE_PARSING_STARTED": "Monitoring Started",
       "SAVE_UNZIPPING": "Unzipping Save...",
       "SAVE_EXTRACTING": "Extracting Data...",
-      "SAVE_PARSING_COMPLETE": "Parsing Complete"
+      "SAVE_PARSING_COMPLETE": "Monitoring Complete"
     }
   },
   "errors": {

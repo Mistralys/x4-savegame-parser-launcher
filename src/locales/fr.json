@@ -8,7 +8,7 @@
   },
   "nav": {
     "home": "Accueil",
-    "parser": "Analyseur",
+    "monitor": "Moniteur",
     "viewer": "Visualiseur",
     "settings": "Paramètres"
   },
@@ -47,10 +47,10 @@
     "events": {
       "MONITOR_STARTED": "Moniteur démarré",
       "SAVE_DETECTED": "Sauvegarde détectée",
-      "SAVE_PARSING_STARTED": "Analyse démarrée",
+      "SAVE_PARSING_STARTED": "Surveillance démarrée",
       "SAVE_UNZIPPING": "Décompression de la sauvegarde...",
       "SAVE_EXTRACTING": "Extraction des données...",
-      "SAVE_PARSING_COMPLETE": "Analyse terminée"
+      "SAVE_PARSING_COMPLETE": "Surveillance terminée"
     }
   },
   "errors": {

@@ -81,9 +81,9 @@ export const SaveSelector: React.FC<SaveSelectorProps> = ({ onSelect, selectedId
     try {
       await queueExtraction(save.id);
       
-      const message = isMonitorRunning 
+      const message = isMonitorRunning
         ? `"${save.name}" has been added to the queue and will be extracted shortly.`
-        : `"${save.name}" added to queue. Please start the Parser tool to begin extraction.`;
+        : `"${save.name}" added to queue. Please start the Monitor tool to begin extraction.`;
       
       showNotification('info', 'Extraction Queued', message);
       
@@ -101,18 +101,18 @@ export const SaveSelector: React.FC<SaveSelectorProps> = ({ onSelect, selectedId
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold flex items-center gap-2">
-          <Database size={20} className="text-blue-500" />
-          Available Savegames
-        </h3>
-        <button 
+    <div className="flex flex-col space-y-8">
+      <div className="flex items-center justify-between shrink-0">
+        <div>
+          <p className="text-sm text-gray-500">Select a save to view details or trigger a new extraction.</p>
+        </div>
+        <button
           onClick={fetchSaves}
           disabled={isLoading}
-          className="p-1.5 text-gray-400 hover:text-blue-500 transition-colors rounded-md hover:bg-blue-500/10"
+          className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-all border border-gray-200 dark:border-gray-700 shadow-sm"
         >
           <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+          Refresh List
         </button>
       </div>
 
@@ -120,26 +120,32 @@ export const SaveSelector: React.FC<SaveSelectorProps> = ({ onSelect, selectedId
         <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
           <PlayCircle size={18} className="text-blue-500 shrink-0" />
           <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium leading-relaxed">
-            The Parser is offline. You can still queue saves, but they will only be processed once the Parser is started.
+            The Monitor is offline. You can still queue saves, but they will only be processed once the Monitor is started.
           </p>
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {!saves && isLoading ? (
-           <p className="text-sm text-gray-400 italic text-center py-8">Scanning for saves...</p>
+           <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <Loader2 size={48} className="animate-spin text-blue-500 opacity-20" />
+              <p className="text-sm text-gray-400 italic">Scanning your X4 universe...</p>
+           </div>
         ) : saves?.main.length === 0 && saves?.archived.length === 0 ? (
-          <p className="text-sm text-gray-500 italic text-center py-4">No saves found.</p>
+          <p className="text-sm text-gray-500 italic text-center py-12">No saves found. Ensure your game folders are configured correctly.</p>
         ) : null}
 
         {saves?.main && saves.main.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Main Saves</p>
-            <div className="grid grid-cols-1 gap-2">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 px-1">
+               <Database size={16} className="text-blue-500" />
+               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Main Saves</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {saves.main.map((save) => (
-                <SaveItem 
-                  key={save.id} 
-                  save={save} 
+                <SaveItem
+                  key={save.id}
+                  save={save}
                   isSelected={selectedId === save.id}
                   isQueueing={queueingIds.has(save.id)}
                   isQueued={queuedIds.has(save.id)}
@@ -151,13 +157,16 @@ export const SaveSelector: React.FC<SaveSelectorProps> = ({ onSelect, selectedId
         )}
 
         {saves?.archived && saves.archived.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Archived Extracts</p>
-            <div className="grid grid-cols-1 gap-2">
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center gap-3 px-1">
+               <Archive size={16} className="text-purple-500" />
+               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Archived Extracts</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {saves.archived.map((save) => (
-                <SaveItem 
-                  key={save.id} 
-                  save={save} 
+                <SaveItem
+                  key={save.id}
+                  save={save}
                   isArchived
                   isSelected={selectedId === save.id}
                   isQueueing={queueingIds.has(save.id)}

@@ -93,7 +93,9 @@ export const ToolView: React.FC<ToolViewProps> = ({ tool }) => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg font-bold capitalize">{tool}</h3>
+              <h3 className="text-lg font-bold capitalize">
+                {tool === 'parser' ? t('nav.monitor') : tool}
+              </h3>
               {state.version && (
                 <span className="text-[10px] bg-gray-200 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-gray-500">
                   v{state.version}

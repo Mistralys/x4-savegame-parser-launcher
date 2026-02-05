@@ -25,7 +25,7 @@ interface SystemInfo {
   arch: string;
 }
 
-type Tab = "home" | "parser" | "viewer" | "settings";
+type Tab = "home" | "monitor" | "viewer" | "settings";
 
 function App() {
   const { t } = useI18n();
@@ -75,74 +75,61 @@ function App() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-gray-200 dark:border-gray-800 flex flex-col bg-gray-50 dark:bg-gray-900 shrink-0 relative">
-        {/* Sidebar Drag Layer */}
-        <div 
-          data-tauri-drag-region 
-          className="absolute top-0 left-0 right-0 h-12 z-0" 
-          style={{ WebkitAppRegion: 'drag' } as any}
-        />
-        
-        <div className="h-12 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 cursor-default select-none shrink-0 relative z-10 pointer-events-none">
-          <div className="flex items-center">
-            <Command className="mr-2 text-blue-500" size={20} />
-            <span className="font-bold text-sm tracking-tight">{t('app.title')}</span>
-          </div>
-        </div>
-        
-        <nav className="flex-1 p-4 space-y-2 relative z-10">
-          <NavItem 
-            icon={<Home size={18} />} 
-            label={t('nav.home')} 
-            active={activeTab === "home"} 
-            onClick={() => setActiveTab("home")} 
-          />
-          <NavItem
-            icon={<Layout size={18} />}
-            label={t('nav.parser')}
-            active={activeTab === "parser"}
-            onClick={() => setActiveTab("parser")}
-          />
-          <NavItem
-            icon={<Activity size={18} />}
-            label={t('nav.viewer')}
-            active={activeTab === "viewer"}
-            onClick={() => setActiveTab("viewer")}
-          />
-          <NavItem 
-            icon={<Settings size={18} />} 
-            label={t('nav.settings')} 
-            active={activeTab === "settings"} 
-            onClick={() => setActiveTab("settings")} 
-          />
-        </nav>
-
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800 relative z-10">
-          <ThemeToggle />
-        </div>
-      </aside>
-
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         <ErrorBanner />
         
         {/* Header / Title Bar */}
-        <header className="h-12 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shrink-0 cursor-default relative">
+        <header className="h-14 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shrink-0 cursor-default relative">
           {/* Main Drag Layer */}
-          <div 
-            data-tauri-drag-region 
-            className="absolute inset-0 z-0" 
+          <div
+            data-tauri-drag-region
+            className="absolute inset-0 z-0"
             style={{ WebkitAppRegion: 'drag' } as any}
           />
           
           {/* Header Content Layer */}
-          <div className="absolute inset-0 flex items-center justify-between z-10 pointer-events-none px-6">
-            <div className="text-xs text-gray-500 dark:text-gray-400 font-medium select-none">
-              {t('app.status')}: <span className="text-green-500">{t('app.ready')}</span>
+          <div className="absolute inset-0 flex items-center justify-between z-10 px-6">
+            {/* Left: App Title */}
+            <div className="flex items-center gap-3 shrink-0 pointer-events-none">
+              <div className="p-1.5 rounded-lg bg-blue-500 text-white shadow-lg shadow-blue-500/20">
+                 <Command size={20} />
+              </div>
+              <span className="font-bold text-sm tracking-tight hidden sm:block">{t('app.title')}</span>
             </div>
+
+            {/* Center: Main Navigation */}
+            <nav className="flex items-center gap-1 bg-gray-100 dark:bg-gray-900 p-1 rounded-xl border border-gray-200 dark:border-gray-800 pointer-events-auto mx-4">
+              <NavTab
+                icon={<Home size={16} />}
+                label={t('nav.home')}
+                active={activeTab === "home"}
+                onClick={() => setActiveTab("home")}
+              />
+              <NavTab
+                icon={<Layout size={16} />}
+                label={t('nav.monitor')}
+                active={activeTab === "monitor"}
+                onClick={() => setActiveTab("monitor")}
+              />
+              <NavTab
+                icon={<Activity size={16} />}
+                label={t('nav.viewer')}
+                active={activeTab === "viewer"}
+                onClick={() => setActiveTab("viewer")}
+              />
+              <NavTab
+                icon={<Settings size={16} />}
+                label={t('nav.settings')}
+                active={activeTab === "settings"}
+                onClick={() => setActiveTab("settings")}
+              />
+            </nav>
             
-            <div className="flex items-center h-full pointer-events-auto">
+            {/* Right: Actions & Window Controls */}
+            <div className="flex items-center h-full pointer-events-auto gap-2 shrink-0">
+              <div className="w-px h-6 bg-gray-200 dark:border-gray-800 mx-2" />
+
               <div
                 onClick={async (e) => {
                   e.stopPropagation();
@@ -152,7 +139,7 @@ function App() {
                     { title: 'About', kind: 'info' }
                   );
                 }}
-                className="p-3 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer h-full flex items-center"
+                className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer rounded-lg"
                 title="About"
               >
                 <Info size={18} />
@@ -166,7 +153,6 @@ function App() {
           <div className={cn("mx-auto space-y-8", activeTab === "viewer" ? "max-w-6xl" : "max-w-3xl")}>
             {activeTab === "home" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-2">{t('app.title')}</h1>
                 <p className="text-gray-500 dark:text-gray-400">
                   {t('app.ready')} - {config.language.toUpperCase()}
                 </p>
@@ -187,21 +173,18 @@ function App() {
 
             {activeTab === "settings" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('settings.title')}</h1>
                 <SettingsView />
               </section>
             )}
 
-            {activeTab === "parser" && (
+            {activeTab === "monitor" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('nav.parser')}</h1>
                 <ToolView tool="parser" />
               </section>
             )}
 
             {activeTab === "viewer" && (
               <section className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <h1 className="text-3xl font-extrabold tracking-tight mb-6">{t('nav.viewer')}</h1>
                 <SaveDataViewer />
               </section>
             )}
@@ -212,29 +195,29 @@ function App() {
   );
 }
 
-const NavItem = ({ 
-  icon, 
-  label, 
-  active = false, 
-  onClick 
-}: { 
-  icon: React.ReactNode; 
-  label: string; 
+const NavTab = ({
+  icon,
+  label,
+  active = false,
+  onClick
+}: {
+  icon: React.ReactNode;
+  label: string;
   active?: boolean;
   onClick: () => void;
 }) => (
-  <div 
+  <button
     onClick={onClick}
     className={cn(
-      "flex items-center px-3 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer",
-      active 
-        ? "bg-blue-500/10 text-blue-600 dark:text-blue-400" 
-        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-gray-100"
+      "flex items-center px-4 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap",
+      active
+        ? "bg-white dark:bg-gray-800 text-blue-500 shadow-sm shadow-black/5"
+        : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5"
     )}
   >
-    <span className="mr-3">{icon}</span>
+    <span className="mr-2 opacity-70">{icon}</span>
     {label}
-  </div>
+  </button>
 );
 
 export default App;
