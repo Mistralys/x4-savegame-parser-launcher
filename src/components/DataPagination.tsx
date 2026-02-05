@@ -8,19 +8,28 @@ interface DataPaginationProps {
   isLoading?: boolean;
 }
 
-export const DataPagination: React.FC<DataPaginationProps> = ({ 
-  pagination, 
+export const DataPagination: React.FC<DataPaginationProps> = ({
+  pagination,
   onPageChange,
-  isLoading 
+  isLoading
 }) => {
   const { total, limit, offset } = pagination;
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.ceil(total / limit);
 
+  const handleJump = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const page = parseInt(formData.get('page') as string);
+    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+      onPageChange((page - 1) * limit);
+    }
+  };
+
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 rounded-b-2xl">
+    <div className="sticky bottom-0 z-20 flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 rounded-b-2xl shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
       <div className="flex-1 flex justify-between sm:hidden">
         <button
           onClick={() => onPageChange(offset - limit)}
@@ -60,9 +69,20 @@ export const DataPagination: React.FC<DataPaginationProps> = ({
               icon={<ChevronLeft size={16} />}
             />
             
-            <div className="px-4 py-2 text-xs font-bold text-gray-500 bg-gray-50 dark:bg-gray-800 border-y border-gray-200 dark:border-gray-800 flex items-center min-w-[80px] justify-center">
-              Page {currentPage} of {totalPages}
-            </div>
+            <form onSubmit={handleJump} className="flex items-center">
+              <input
+                name="page"
+                type="number"
+                min={1}
+                max={totalPages}
+                defaultValue={currentPage}
+                key={currentPage}
+                className="w-12 px-2 py-2 text-xs font-bold text-center text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-y border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+              <div className="px-3 py-2 text-xs font-bold text-gray-400 bg-gray-50 dark:bg-gray-800 border-y border-gray-200 dark:border-gray-800 border-r rounded-r-none whitespace-nowrap">
+                of {totalPages}
+              </div>
+            </form>
 
             <PaginationButton
               onClick={() => onPageChange(offset + limit)}

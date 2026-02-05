@@ -53,6 +53,36 @@
       "SAVE_PARSING_COMPLETE": "Surveillance terminée"
     }
   },
+  "ships": {
+    "title": "Vaisseaux possédés",
+    "subtitle": "Aperçu de vos actifs de flotte",
+    "empty": "Vous ne possédez aucun vaisseau dans cette sauvegarde.",
+    "hull": "Coque",
+    "shields": "Boucliers",
+    "cargo": "Cargaison",
+    "purpose": "Objectif",
+    "class": "Classe",
+    "sector": "Secteur",
+    "name": "Nom du vaisseau",
+    "filters": {
+      "all": "Tous les vaisseaux",
+      "combat": "Combat",
+      "trade": "Commerce",
+      "mining": "Minage",
+      "scout": "Éclaireur",
+      "size": {
+        "all": "Toutes les tailles",
+        "s": "Petit (S)",
+        "m": "Moyen (M)",
+        "l": "Grand (L)",
+        "xl": "Très grand (XL)"
+      }
+    }
+  },
+  "pagination": {
+    "jump_to": "Aller à la page",
+    "page_x_of_y": "Page {current} sur {total}"
+  },
   "errors": {
     "title": "Erreur",
     "invalid_config": "Configuration invalide",

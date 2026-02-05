@@ -53,6 +53,36 @@
       "SAVE_PARSING_COMPLETE": "Monitoring Complete"
     }
   },
+  "ships": {
+    "title": "Owned Ships",
+    "subtitle": "Overview of your fleet assets",
+    "empty": "You do not own any ships in this savegame yet.",
+    "hull": "Hull",
+    "shields": "Shields",
+    "cargo": "Cargo",
+    "purpose": "Purpose",
+    "class": "Class",
+    "sector": "Sector",
+    "name": "Ship Name",
+    "filters": {
+      "all": "All Ships",
+      "combat": "Combat",
+      "trade": "Trade",
+      "mining": "Mining",
+      "scout": "Scout",
+      "size": {
+        "all": "All Sizes",
+        "s": "Small (S)",
+        "m": "Medium (M)",
+        "l": "Large (L)",
+        "xl": "Extra Large (XL)"
+      }
+    }
+  },
+  "pagination": {
+    "jump_to": "Jump to page",
+    "page_x_of_y": "Page {current} of {total}"
+  },
   "errors": {
     "title": "Error",
     "invalid_config": "Invalid Configuration",

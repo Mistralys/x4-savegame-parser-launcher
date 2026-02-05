@@ -5,6 +5,7 @@ import { useProcess } from '../context/ProcessContext';
 import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database, Zap, LayoutDashboard, Ghost, Ship, Factory, ScrollText, ChevronLeft } from 'lucide-react';
 import { SaveSelector } from './SaveSelector';
 import { ShipLossesView } from './ShipLossesView';
+import { OwnedShipsView } from './OwnedShipsView';
 
 interface SaveInfo {
   saveName: string;
@@ -143,12 +144,11 @@ export const SaveDataViewer: React.FC = () => {
               active={activeScreen === 'ship-losses'} 
               onClick={() => setActiveScreen('ship-losses')} 
            />
-           <CategoryTab 
-              icon={<Ship size={16} />} 
-              label="Owned Ships" 
-              disabled
-              active={activeScreen === 'ships'} 
-              onClick={() => setActiveScreen('ships')} 
+           <CategoryTab
+              icon={<Ship size={16} />}
+              label="Owned Ships"
+              active={activeScreen === 'ships'}
+              onClick={() => setActiveScreen('ships')}
            />
            <CategoryTab 
               icon={<Factory size={16} />} 
@@ -247,6 +247,10 @@ export const SaveDataViewer: React.FC = () => {
 
             {activeScreen === 'ship-losses' && selectedSaveId && (
                <ShipLossesView saveId={selectedSaveId} />
+            )}
+
+            {activeScreen === 'ships' && selectedSaveId && (
+               <OwnedShipsView saveId={selectedSaveId} />
             )}
           </div>
         )}

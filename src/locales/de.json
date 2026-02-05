@@ -53,6 +53,36 @@
       "SAVE_PARSING_COMPLETE": "Überwachung abgeschlossen"
     }
   },
+  "ships": {
+    "title": "Eigene Schiffe",
+    "subtitle": "Übersicht Ihrer Flottenwerte",
+    "empty": "Sie besitzen in diesem Spielstand noch keine Schiffe.",
+    "hull": "Hülle",
+    "shields": "Schilde",
+    "cargo": "Fracht",
+    "purpose": "Zweck",
+    "class": "Klasse",
+    "sector": "Sektor",
+    "name": "Schiffsname",
+    "filters": {
+      "all": "Alle Schiffe",
+      "combat": "Kampf",
+      "trade": "Handel",
+      "mining": "Bergbau",
+      "scout": "Aufklärer",
+      "size": {
+        "all": "Alle Größen",
+        "s": "Klein (S)",
+        "m": "Mittel (M)",
+        "l": "Groß (L)",
+        "xl": "Riesig (XL)"
+      }
+    }
+  },
+  "pagination": {
+    "jump_to": "Gehe zu Seite",
+    "page_x_of_y": "Seite {current} von {total}"
+  },
   "errors": {
     "title": "Fehler",
     "invalid_config": "Ungültige Konfiguration",
