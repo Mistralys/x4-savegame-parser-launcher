@@ -26,10 +26,10 @@ export const DataPagination: React.FC<DataPaginationProps> = ({
     }
   };
 
-  if (totalPages <= 1) return null;
+  if (total === 0) return null;
 
   return (
-    <div className="sticky bottom-0 z-20 flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 rounded-b-2xl shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+    <div className="sticky bottom-0 -mx-8 z-50 flex items-center justify-between px-8 py-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 shadow-[0_-10px_25px_rgba(0,0,0,0.1)] mt-8">
       <div className="flex-1 flex justify-between sm:hidden">
         <button
           onClick={() => onPageChange(offset - limit)}

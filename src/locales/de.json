@@ -64,18 +64,23 @@
     "class": "Klasse",
     "sector": "Sektor",
     "name": "Schiffsname",
+    "search_placeholder": "Nach Name oder Code suchen...",
+    "filter_by_role": "Nach Rolle filtern",
+    "filter_by_size": "Nach Größe filtern",
+    "filter_by_faction": "Nach Fraktion filtern",
     "filters": {
       "all": "Alle Schiffe",
       "combat": "Kampf",
       "trade": "Handel",
       "mining": "Bergbau",
       "scout": "Aufklärer",
+      "search_placeholder": "Nach Name oder Code suchen...",
       "size": {
-        "all": "Alle Größen",
-        "s": "Klein (S)",
-        "m": "Mittel (M)",
-        "l": "Groß (L)",
-        "xl": "Riesig (XL)"
+        "all": "Alle",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL"
       }
     }
   },

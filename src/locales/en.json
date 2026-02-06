@@ -64,18 +64,23 @@
     "class": "Class",
     "sector": "Sector",
     "name": "Ship Name",
+    "search_placeholder": "Search ships by name or code...",
+    "filter_by_role": "Filter by Role",
+    "filter_by_size": "Filter by Size",
+    "filter_by_faction": "Filter by Faction",
     "filters": {
       "all": "All Ships",
       "combat": "Combat",
       "trade": "Trade",
       "mining": "Mining",
       "scout": "Scout",
+      "search_placeholder": "Search ships by name or code...",
       "size": {
-        "all": "All Sizes",
-        "s": "Small (S)",
-        "m": "Medium (M)",
-        "l": "Large (L)",
-        "xl": "Extra Large (XL)"
+        "all": "All",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL"
       }
     }
   },

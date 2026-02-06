@@ -64,18 +64,23 @@
     "class": "Classe",
     "sector": "Secteur",
     "name": "Nom du vaisseau",
+    "search_placeholder": "Chercher par nom ou code...",
+    "filter_by_role": "Filtrer par rôle",
+    "filter_by_size": "Filtrer par taille",
+    "filter_by_faction": "Filtrer par faction",
     "filters": {
       "all": "Tous les vaisseaux",
       "combat": "Combat",
       "trade": "Commerce",
       "mining": "Minage",
       "scout": "Éclaireur",
+      "search_placeholder": "Chercher par nom ou code...",
       "size": {
-        "all": "Toutes les tailles",
-        "s": "Petit (S)",
-        "m": "Moyen (M)",
-        "l": "Grand (L)",
-        "xl": "Très grand (XL)"
+        "all": "Toutes",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL"
       }
     }
   },
