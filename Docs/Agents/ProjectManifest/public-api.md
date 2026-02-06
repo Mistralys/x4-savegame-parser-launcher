@@ -76,6 +76,11 @@ struct ToolConfig {
 - `App`: Main application entry.
 - `ToolView`: Component for managing individual tools (Parser/Viewer).
 - `SettingsView`: UI for configuration management.
+- `SaveDataViewer`: Master-Detail view for exploring extracted save data.
+- `ShipLossesView`: Analysis screen for universe-wide ship attrition.
+- `OwnedShipsView`: Management screen for player-owned fleet assets.
+- `DataTable`: Reusable, styled data table component.
+- `DataPagination`: Standardized pagination controls with page-jump.
 - `LogViewer`: Displays real-time process output.
 - `ThemeToggle`: Switcher for light/dark/system themes.
 - `ErrorBanner`: Global error display.
