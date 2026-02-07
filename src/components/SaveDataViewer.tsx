@@ -6,6 +6,7 @@ import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database, 
 import { SaveSelector } from './SaveSelector';
 import { ShipLossesView } from './ShipLossesView';
 import { OwnedShipsView } from './OwnedShipsView';
+import { LogbookView } from './LogbookView';
 
 interface SaveInfo {
   saveName: string;
@@ -157,12 +158,11 @@ export const SaveDataViewer: React.FC = () => {
               active={activeScreen === 'stations'} 
               onClick={() => setActiveScreen('stations')} 
            />
-           <CategoryTab 
-              icon={<ScrollText size={16} />} 
-              label="Logbook" 
-              disabled
-              active={activeScreen === 'logbook'} 
-              onClick={() => setActiveScreen('logbook')} 
+           <CategoryTab
+              icon={<ScrollText size={16} />}
+              label="Logbook"
+              active={activeScreen === 'logbook'}
+              onClick={() => setActiveScreen('logbook')}
            />
         </nav>
       </div>
@@ -251,6 +251,10 @@ export const SaveDataViewer: React.FC = () => {
 
             {activeScreen === 'ships' && selectedSaveId && (
                <OwnedShipsView saveId={selectedSaveId} />
+            )}
+
+            {activeScreen === 'logbook' && selectedSaveId && (
+               <LogbookView saveId={selectedSaveId} />
             )}
           </div>
         )}

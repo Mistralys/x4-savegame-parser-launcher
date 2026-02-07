@@ -84,6 +84,40 @@
       }
     }
   },
+  "logbook": {
+    "title": "Logbook",
+    "subtitle": "Historical game event log",
+    "empty": "No logbook entries found in this savegame.",
+    "time": "Time",
+    "category": "Category",
+    "event": "Event",
+    "description": "Description",
+    "money": "Profit/Loss",
+    "search_placeholder": "Search by title or text...",
+    "filter_by_category": "Filter by Category",
+    "categories": {
+      "all": "All Categories",
+      "combat": "Combat",
+      "mission": "Missions",
+      "trade": "Trade",
+      "station-finance": "Station Finance",
+      "station-building": "Station Building",
+      "ship-construction": "Ship Construction",
+      "ship-supply": "Ship Supply",
+      "alert": "Alerts",
+      "emergency": "Emergency",
+      "attacked": "Ship Defense",
+      "destroyed": "Destroyed",
+      "promotion": "Promotion",
+      "reward": "Rewards",
+      "reputation": "Reputation",
+      "lockbox": "Lockbox",
+      "war": "War Updates",
+      "crew-assignment": "Crew Assignment",
+      "tips": "Tips",
+      "misc": "Miscellaneous"
+    }
+  },
   "pagination": {
     "jump_to": "Jump to page",
     "page_x_of_y": "Page {current} of {total}"

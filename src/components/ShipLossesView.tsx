@@ -39,8 +39,7 @@ export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
       const response = await query<ShipLoss[]>(saveId, 'ship-losses', {
         filter,
         limit,
-        offset,
-        cacheKey: `ship-losses-${categoryFilter}`
+        offset
       });
 
       setData(response.data);

@@ -84,6 +84,40 @@
       }
     }
   },
+  "logbook": {
+    "title": "Journal de bord",
+    "subtitle": "Journal historique des événements du jeu",
+    "empty": "Aucune entrée trouvée dans cette sauvegarde.",
+    "time": "Temps",
+    "category": "Catégorie",
+    "event": "Événement",
+    "description": "Description",
+    "money": "Profit/Perte",
+    "search_placeholder": "Rechercher par titre ou texte...",
+    "filter_by_category": "Filtrer par catégorie",
+    "categories": {
+      "all": "Toutes les catégories",
+      "combat": "Combat",
+      "mission": "Missions",
+      "trade": "Commerce",
+      "station-finance": "Finances de station",
+      "station-building": "Construction de station",
+      "ship-construction": "Construction de vaisseau",
+      "ship-supply": "Ravitaillement",
+      "alert": "Alertes",
+      "emergency": "Urgence",
+      "attacked": "Défense de vaisseau",
+      "destroyed": "Détruit",
+      "promotion": "Promotion",
+      "reward": "Récompenses",
+      "reputation": "Réputation",
+      "lockbox": "Lockbox",
+      "war": "Mises à jour de guerre",
+      "crew-assignment": "Affectation d'équipage",
+      "tips": "Astuces",
+      "misc": "Divers"
+    }
+  },
   "pagination": {
     "jump_to": "Aller à la page",
     "page_x_of_y": "Page {current} sur {total}"

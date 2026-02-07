@@ -84,6 +84,40 @@
       }
     }
   },
+  "logbook": {
+    "title": "Logbuch",
+    "subtitle": "Historisches Spiel-Ereignisprotokoll",
+    "empty": "Keine Logbucheinträge in diesem Spielstand gefunden.",
+    "time": "Zeit",
+    "category": "Kategorie",
+    "event": "Ereignis",
+    "description": "Beschreibung",
+    "money": "Profit/Verlust",
+    "search_placeholder": "Nach Titel oder Text suchen...",
+    "filter_by_category": "Nach Kategorie filtern",
+    "categories": {
+      "all": "Alle Kategorien",
+      "combat": "Kampf",
+      "mission": "Missionen",
+      "trade": "Handel",
+      "station-finance": "Stationsfinanzen",
+      "station-building": "Stationsbau",
+      "ship-construction": "Schiffsbau",
+      "ship-supply": "Schiffsversorgung",
+      "alert": "Warnungen",
+      "emergency": "Notfall",
+      "attacked": "Schiffsverteidigung",
+      "destroyed": "Zerstört",
+      "promotion": "Beförderung",
+      "reward": "Belohnungen",
+      "reputation": "Ruf",
+      "lockbox": "Lockbox",
+      "war": "Kriegs-Updates",
+      "crew-assignment": "Crew-Zuweisung",
+      "tips": "Tipps",
+      "misc": "Verschiedenes"
+    }
+  },
   "pagination": {
     "jump_to": "Gehe zu Seite",
     "page_x_of_y": "Seite {current} von {total}"
