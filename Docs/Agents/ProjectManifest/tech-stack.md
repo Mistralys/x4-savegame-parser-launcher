@@ -1,7 +1,7 @@
 # Tech Stack & Patterns
 
 ## Runtime & Frameworks
-- **Backend:** [Rust](https://www.rust-lang.org/) with [Tauri v2](https://tauri.app/).
+- **Backend:** [Rust](https://www.rust-lang.org/) with [Tauri v2](https://tauri.app/), [Tokio](https://tokio.rs/), and [Chrono](https://github.com/chronotope/chrono).
 - **Frontend:** [React 19](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/).
 - **Build Tool:** [Vite](https://vitejs.dev/).
 

@@ -15,6 +15,7 @@
 - `async fn save_tool_config(config: ToolConfig, install_path: String) -> Result<(), String>`
 - `async fn load_tool_config(install_path: String) -> Result<ToolConfig, String>`
 - `async fn check_tool_config_exists(install_path: String) -> Result<bool, String>`
+- `async fn query_save_data(php_path: String, script_path: String, command: String, save: String, filter: Option<String>, limit: Option<u32>, offset: Option<u32>, cache_key: Option<String>) -> Result<serde_json::Value, String>`
 
 #### Models
 ```rust
@@ -70,6 +71,14 @@ struct ToolConfig {
 
 #### `ErrorContext.tsx`
 - `useError(): { showError: (title, message, details?) => void, clearError: () => void, currentError: ErrorDialog | null }`
+
+#### `NotificationContext.tsx`
+- `useNotification(): { notify: (message, type: 'success' | 'info' | 'warning' | 'error') => void, notifications: Notification[] }`
+
+### Hooks
+
+#### `useSaveData.ts`
+- `useSaveData(command, saveName, options): { data, totalItems, isLoading, error, setFilter, setPage, setLimit }`
 
 ### Components
 
