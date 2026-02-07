@@ -13,7 +13,7 @@ The `SaveDataViewer` implements a **Master-Detail** pattern:
 - 👻 **Ship Losses**: History of destroyed ships in the universe.
 - 🚢 **Owned Ships**: Detailed list of player fleet assets.
 - 🏭 **Stations**: (Planned) Station and factory overview.
-- 📜 **Logbook**: (Planned) Historical game event log.
+- 📜 **Logbook**: Historical game event log.
 
 ---
 
@@ -75,7 +75,29 @@ The view implements dynamic JMESPath generation based on UI filters:
 
 ---
 
-## 4. Shared UI Components
+## 4. Logbook View (`LogbookView.tsx`)
+
+Displays historical game event log.
+
+- **Source API**: `query_save_data` with command `logbook`.
+- **Primary Filter**: `reverse(sort_by([*], &time))` (Latest first).
+- **Search**: Substring match on `title` or `text`.
+
+### Data Schema
+```typescript
+interface LogbookEntry {
+  time: number;           // Game time in seconds
+  timeFormatted: string;  // User-friendly game time (e.g. 10d 04h 22m)
+  category: string;       // Entry category (e.g., 'general', 'missions', 'alerts', 'upkeep')
+  title: string;          // Short summary
+  text: string;           // Detailed description
+  money: number | null;   // Transaction amount (if applicable)
+}
+```
+
+---
+
+## 5. Shared UI Components
 
 - **`DataTable`**: Generic table wrapper with dark-mode support and standard cell styling.
 - **`DataPagination`**: Sticky footer navigation with "Jump to Page" capability.
