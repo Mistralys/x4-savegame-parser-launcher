@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
+import { useQueryProgress } from '../hooks/useQueryProgress';
 import { useI18n } from '../context/I18nContext';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
-import { Search, Filter, ScrollText, AlertCircle, Info, Target, Settings, Lightbulb, Coins, ShieldAlert, Zap, Skull, TrendingUp, Gift, Star, Box, Flag, Users, Factory, Wrench, Ship } from 'lucide-react';
+import { Search, Filter, ScrollText, AlertCircle, Info, Target, Settings, Lightbulb, Coins, ShieldAlert, Zap, Skull, TrendingUp, Gift, Star, Box, Flag, Users, Factory, Wrench, Ship, Loader2 } from 'lucide-react';
 
 interface LogbookEntry {
   time: number;
@@ -65,6 +66,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export const LogbookView: React.FC<LogbookViewProps> = ({ saveId }) => {
   const { query, isLoading, error: apiError } = useSaveData();
+  const { inProgress: cachingInProgress, operation } = useQueryProgress();
   const { t } = useI18n();
   const [data, setData] = useState<LogbookEntry[]>([]);
   const [total, setTotal] = useState(0);
@@ -225,6 +227,20 @@ export const LogbookView: React.FC<LogbookViewProps> = ({ saveId }) => {
         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3 text-red-500 animate-in fade-in slide-in-from-top-2">
           <AlertCircle size={20} />
           <p className="text-sm font-medium">{apiError}</p>
+        </div>
+      )}
+
+      {cachingInProgress && operation === 'LOG_CACHE_BUILDING' && (
+        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center gap-3">
+          <Loader2 className="animate-spin text-blue-500" size={20} />
+          <div>
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+              {t('logbook.cacheBuildingTitle')}
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+              {t('logbook.cacheBuildingMessage')}
+            </p>
+          </div>
         </div>
       )}
 

@@ -16,6 +16,18 @@
 - `async fn load_tool_config(install_path: String) -> Result<ToolConfig, String>`
 - `async fn check_tool_config_exists(install_path: String) -> Result<bool, String>`
 - `async fn query_save_data(php_path: String, script_path: String, command: String, save: String, filter: Option<String>, limit: Option<u32>, offset: Option<u32>, cache_key: Option<String>) -> Result<serde_json::Value, String>`
+- `async fn query_save_data_with_progress(app: AppHandle, php_path: String, script_path: String, command: String, save: String, filter: Option<String>, limit: Option<u32>, offset: Option<u32>, cache_key: Option<String>) -> Result<serde_json::Value, String>`
+
+**Command Details**:
+
+**`query_save_data`**: Synchronous query command that waits for completion and returns result. STDERR messages logged to console only.
+
+**`query_save_data_with_progress`**: Streaming query command that emits progress events to frontend via `query-progress` event. Spawns PHP with `--json` flag, streams NDJSON events, returns final result. Use this for operations that may take time (e.g., logbook queries on legacy saves).
+
+**Events Emitted by `query_save_data_with_progress`**:
+- `query-progress`
+  - Payload: `{ tool: String, message: serde_json::Value }`
+  - Message structure: `{ type: "progress", name: String, status: "started"|"progress"|"complete", payload?: Object, timestamp: String }`
 
 #### Models
 ```rust

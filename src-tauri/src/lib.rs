@@ -3,7 +3,9 @@ mod process;
 use std::fs::{File, OpenOptions};
 use std::path::PathBuf;
 use std::io::Write;
-use tauri::{AppHandle, Manager, State};
+use std::process::Stdio;
+use tauri::{AppHandle, Emitter, Manager, State};
+use tokio::io::{AsyncBufReadExt, BufReader};
 use crate::process::ProcessManager;
 
 #[derive(serde::Serialize)]
@@ -200,6 +202,155 @@ async fn query_save_data(
     Ok(json)
 }
 
+#[derive(Clone, serde::Serialize)]
+struct QueryProgressEvent {
+    tool: String,
+    message: serde_json::Value,
+}
+
+#[tauri::command]
+async fn query_save_data_with_progress(
+    app: AppHandle,
+    php_path: String,
+    script_path: String,
+    command: String,
+    save: String,
+    filter: Option<String>,
+    limit: Option<u32>,
+    offset: Option<u32>,
+    cache_key: Option<String>,
+) -> Result<serde_json::Value, String> {
+    // Build command with --json flag for event streaming
+    let mut cmd = tokio::process::Command::new(&php_path);
+    cmd.arg(&script_path)
+        .arg("--json")
+        .arg(&command)
+        .arg("--save")
+        .arg(&save);
+
+    if let Some(f) = filter {
+        if !f.is_empty() {
+            cmd.arg("--filter");
+            cmd.arg(f);
+        }
+    }
+
+    if let Some(l) = limit {
+        cmd.arg("--limit");
+        cmd.arg(l.to_string());
+    }
+
+    if let Some(o) = offset {
+        cmd.arg("--offset");
+        cmd.arg(o.to_string());
+    }
+
+    if let Some(ck) = cache_key {
+        if !ck.is_empty() {
+            cmd.arg("--cache-key");
+            cmd.arg(ck);
+        }
+    }
+
+    #[cfg(windows)]
+    {
+        const CREATE_NO_WINDOW: u32 = 0x08000000;
+        cmd.creation_flags(CREATE_NO_WINDOW);
+    }
+
+    cmd.stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+
+    let mut child = cmd.spawn().map_err(|e| {
+        eprintln!("Failed to spawn PHP query process: {}", e);
+        format!("Failed to start query: {}", e)
+    })?;
+
+    let stdout = child.stdout.take().ok_or("Failed to capture stdout")?;
+    let stderr = child.stderr.take().ok_or("Failed to capture stderr")?;
+
+    // Stream STDERR for debugging
+    let stderr_handle = tokio::spawn(async move {
+        let reader = BufReader::new(stderr);
+        let mut lines = reader.lines();
+        while let Ok(Some(line)) = lines.next_line().await {
+            if !line.is_empty() {
+                eprintln!("CLI STDERR: {}", line);
+            }
+        }
+    });
+
+    // Stream STDOUT, emit events, capture final result
+    let app_clone = app.clone();
+    let stdout_handle = tokio::spawn(async move {
+        let reader = BufReader::new(stdout);
+        let mut lines = reader.lines();
+        let mut final_result: Option<serde_json::Value> = None;
+
+        while let Ok(Some(line)) = lines.next_line().await {
+            if line.trim().is_empty() {
+                continue;
+            }
+
+            // Try to parse as JSON
+            match serde_json::from_str::<serde_json::Value>(&line) {
+                Ok(json) => {
+                    // Check message type
+                    if let Some(msg_type) = json.get("type").and_then(|t| t.as_str()) {
+                        match msg_type {
+                            "progress" => {
+                                // Emit progress event to frontend
+                                let _ = app_clone.emit(
+                                    "query-progress",
+                                    QueryProgressEvent {
+                                        tool: "query".to_string(),
+                                        message: json,
+                                    },
+                                );
+                            }
+                            "result" => {
+                                // Capture final result
+                                if let Some(data) = json.get("data") {
+                                    final_result = Some(data.clone());
+                                }
+                            }
+                            _ => {
+                                eprintln!("Unknown message type: {}", msg_type);
+                            }
+                        }
+                    }
+                }
+                Err(e) => {
+                    eprintln!("Failed to parse JSON line: {} - Error: {}", line, e);
+                }
+            }
+        }
+
+        final_result
+    });
+
+    // Wait for process to complete
+    let status = child.wait().await.map_err(|e| {
+        format!("Query process error: {}", e)
+    })?;
+
+    // Wait for stdout processing
+    let final_result = stdout_handle.await.map_err(|e| {
+        format!("Failed to process output: {}", e)
+    })?;
+
+    // Wait for stderr (don't care about result)
+    let _ = stderr_handle.await;
+
+    // Check process exit status
+    if !status.success() {
+        return Err(format!("Query failed with exit code: {:?}", status.code()));
+    }
+
+    // Return final result
+    final_result.ok_or_else(|| "No result received from query".to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -221,7 +372,8 @@ pub fn run() {
             save_tool_config,
             load_tool_config,
             check_tool_config_exists,
-            query_save_data
+            query_save_data,
+            query_save_data_with_progress
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?

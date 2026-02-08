@@ -24,6 +24,26 @@
    - `error`: Populates the `error` state with a full exception chain (message, code, class, trace) and adds the fatal error to the log history.
 4. **UI Response:** `ToolView` reacts to these state changes by displaying progress labels, savegame information, and error diagnostics.
 
+## Long-Running Query Flow with Progress
+1. **Trigger:** LogbookView calls `useSaveData.query('log')` which invokes `query_save_data_with_progress`.
+2. **Process Spawn:** Tauri spawns PHP process with `--json` flag: `php query.php --json log --save=X`.
+3. **Event Streaming:** PHP emits NDJSON progress events to stdout:
+   - `{"type":"progress","name":"LOG_CACHE_BUILDING","status":"started",...}`
+   - `{"type":"progress","name":"LOG_CACHE_BUILDING","status":"complete",...}`
+   - `{"type":"result","data":{...}}`
+4. **Rust Processing:** `query_save_data_with_progress` reads stdout line-by-line:
+   - For `type: "progress"`: Emits Tauri event `query-progress` with full message
+   - For `type: "result"`: Captures final data and returns it
+5. **Frontend Listening:** `useQueryProgress` hook listens to `query-progress` events:
+   - `status: "started"` → Sets `inProgress: true, operation: "LOG_CACHE_BUILDING"`
+   - `status: "complete"` → Sets `inProgress: false`
+6. **UI Updates:** LogbookView displays blue progress banner when `inProgress && operation === 'LOG_CACHE_BUILDING'`
+7. **Completion:** When PHP process exits, final result is returned to `useSaveData.query()` and data is displayed
+8. **Parallel Flows:**
+   - Progress updates are non-blocking (frontend receives events in real-time)
+   - Data fetching blocks until PHP completes (returns final result)
+   - Banner automatically hides via `useQueryProgress` state management
+
 ## Configuration Persistence
 1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
 2. **Migration:** On load, the legacy `viewerUrl` is automatically migrated to `viewerHost` and `viewerPort`.

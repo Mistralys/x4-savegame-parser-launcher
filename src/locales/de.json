@@ -95,6 +95,8 @@
     "money": "Profit/Verlust",
     "search_placeholder": "Nach Titel oder Text suchen...",
     "filter_by_category": "Nach Kategorie filtern",
+    "cacheBuildingTitle": "Indizierung läuft",
+    "cacheBuildingMessage": "Logbuch-Index wird für den ersten Zugriff erstellt... Dies kann einen Moment dauern.",
     "categories": {
       "all": "Alle Kategorien",
       "combat": "Kampf",

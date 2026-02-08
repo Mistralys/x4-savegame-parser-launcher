@@ -95,6 +95,8 @@
     "money": "Profit/Loss",
     "search_placeholder": "Search by title or text...",
     "filter_by_category": "Filter by Category",
+    "cacheBuildingTitle": "Indexing in Progress",
+    "cacheBuildingMessage": "Building logbook index for first-time access... This may take a moment.",
     "categories": {
       "all": "All Categories",
       "combat": "Combat",

@@ -57,22 +57,45 @@ export const useSaveData = () => {
         throw new Error('Query script path not configured');
       }
 
-      const response = await invoke<ApiResponse<T>>('query_save_data', {
-        phpPath: config.phpPath,
-        scriptPath: toolPaths.query,
-        command,
-        save,
-        filter: options.filter,
-        limit: options.limit,
-        offset: options.offset,
-        cacheKey: options.cacheKey,
-      });
+      // Try new streaming command first (with progress events)
+      try {
+        const response = await invoke<ApiResponse<T>>('query_save_data_with_progress', {
+          phpPath: config.phpPath,
+          scriptPath: toolPaths.query,
+          command,
+          save,
+          filter: options.filter,
+          limit: options.limit,
+          offset: options.offset,
+          cacheKey: options.cacheKey,
+        });
 
-      if (!response.success) {
-        throw new Error(response.message || 'API request failed');
+        if (!response.success) {
+          throw new Error(response.message || 'API request failed');
+        }
+
+        return response;
+      } catch (streamError) {
+        // Fall back to standard command if streaming not available
+        console.warn('Streaming query failed, falling back to standard query:', streamError);
+        
+        const response = await invoke<ApiResponse<T>>('query_save_data', {
+          phpPath: config.phpPath,
+          scriptPath: toolPaths.query,
+          command,
+          save,
+          filter: options.filter,
+          limit: options.limit,
+          offset: options.offset,
+          cacheKey: options.cacheKey,
+        });
+
+        if (!response.success) {
+          throw new Error(response.message || 'API request failed');
+        }
+
+        return response;
       }
-
-      return response;
     } catch (err: any) {
       const message = err.message || String(err);
       setError(message);
