@@ -7,6 +7,6 @@ used to develop the application and specific features.
 
 **WARNING**: These documents may not reflect the current 
 state of the application. Always refer to the
-[ProjectManifest](/Docs/Agents/ProjectManifest/README.md)
+[ProjectManifest](/docs/agents/project-manifest/README.md)
 to learn about the current implementation.
 

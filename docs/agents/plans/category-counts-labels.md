@@ -738,9 +738,9 @@ If issues arise during implementation:
 
 ### Frontend (x4-savegame-parser-launcher)
 - [AGENTS.md](../AGENTS.md) - Agent operating system
-- [Project Manifest README](../Docs/Agents/ProjectManifest/README.md)
-- [Public API Reference](../Docs/Agents/ProjectManifest/public-api.md)
-- [Constraints](../Docs/Agents/ProjectManifest/constraints.md)
+- [Project Manifest README](../docs/agents/project-manifest/README.md)
+- [Public API Reference](../docs/agents/project-manifest/public-api.md)
+- [Constraints](../docs/agents/project-manifest/constraints.md)
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## General Rules
 - **Tauri Version:** Must use **Tauri v2** syntax and features.
-- **Source of Truth:** The Project Manifest in `/Docs/Agents/ProjectManifest/` is the authoritative guide for AI agents.
+- **Source of Truth:** The Project Manifest in `/docs/agents/project-manifest/` is the authoritative guide for AI agents.
 - **Persistence:** Use `tauri-plugin-store` for application settings and `localStorage` for UI-only preferences (like theme).
 
 ## Backend (Rust)
