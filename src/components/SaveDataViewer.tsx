@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
-import { useI18n } from '../context/I18nContext';
 import { useProcess } from '../context/ProcessContext';
 import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database, Zap, LayoutDashboard, Ghost, Ship, Factory, ScrollText, ChevronLeft } from 'lucide-react';
 import { SaveSelector } from './SaveSelector';
@@ -62,7 +61,6 @@ const CategoryTab: React.FC<{
 export const SaveDataViewer: React.FC = () => {
   const { query, isLoading, error } = useSaveData();
   const { tools } = useProcess();
-  const { t } = useI18n();
   const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
   const [activeScreen, setActiveScreen] = useState<'overview' | 'ship-losses' | 'ships' | 'stations' | 'logbook'>('overview');
   const [saveInfo, setSaveInfo] = useState<SaveInfo | null>(null);

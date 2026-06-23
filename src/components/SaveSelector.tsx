@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
-import { useI18n } from '../context/I18nContext';
 import { useProcess } from '../context/ProcessContext';
 import { useNotification } from '../context/NotificationContext';
 import { Database, Archive, CheckCircle2, Clock, RefreshCw, ChevronRight, Loader2, PlayCircle } from 'lucide-react';
@@ -28,7 +27,6 @@ export const SaveSelector: React.FC<SaveSelectorProps> = ({ onSelect, selectedId
   const { query, queueExtraction, getExtractionQueue, isLoading } = useSaveData();
   const { tools } = useProcess();
   const { showNotification } = useNotification();
-  const { t } = useI18n();
   
   const [saves, setSaves] = useState<ListSavesData | null>(null);
   const [queueingIds, setQueueingIds] = useState<Set<string>>(new Set());

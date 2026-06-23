@@ -4,7 +4,7 @@ import { useQueryProgress } from '../hooks/useQueryProgress';
 import { useI18n } from '../context/I18nContext';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
-import { Search, Filter, ScrollText, AlertCircle, Info, Target, Settings, Lightbulb, Coins, ShieldAlert, Zap, Skull, TrendingUp, Gift, Star, Box, Flag, Users, Factory, Wrench, Ship, Loader2 } from 'lucide-react';
+import { Search, Filter, ScrollText, AlertCircle, Info, Target, Lightbulb, Coins, ShieldAlert, Zap, Skull, TrendingUp, Gift, Star, Box, Flag, Users, Factory, Wrench, Ship, Loader2 } from 'lucide-react';
 
 interface LogbookEntry {
   time: number;

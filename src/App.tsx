@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { ThemeToggle } from "./components/ThemeToggle";
 import { Layout, Home, Settings, Info, Command, AlertCircle, Activity } from "lucide-react";
 import { useI18n } from "./context/I18nContext";
 import { useConfig } from "./context/ConfigContext";

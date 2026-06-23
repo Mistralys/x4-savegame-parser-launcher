@@ -48,7 +48,7 @@ export function useQueryProgress(): QueryProgress {
 
   useEffect(() => {
     let unlisten: UnlistenFn | null = null;
-    let timeoutId: NodeJS.Timeout | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     // Set up event listener
     const setupListener = async () => {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSaveData, Pagination } from '../hooks/useSaveData';
-import { useI18n } from '../context/I18nContext';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
-import { Ghost, ShieldAlert, RefreshCw, Filter } from 'lucide-react';
+import { Ghost, ShieldAlert, RefreshCw } from 'lucide-react';
 
 interface ShipLoss {
   time: number;
@@ -21,7 +20,6 @@ interface ShipLossesViewProps {
 
 export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
   const { query, isLoading } = useSaveData();
-  const { t } = useI18n();
   const [data, setData] = useState<ShipLoss[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [offset, setOffset] = useState(0);
