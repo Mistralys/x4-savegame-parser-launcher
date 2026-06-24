@@ -5,9 +5,6 @@ use tauri::{AppHandle, Emitter, Runtime};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::{Child, Command};
 
-#[cfg(windows)]
-use std::os::windows::process::CommandExt;
-
 #[derive(Clone, serde::Serialize)]
 struct ProcessOutput {
     tool: String,
@@ -38,7 +35,7 @@ impl ProcessManager {
 
         // Kill existing process if it's already running for this tool
         if let Some(mut child) = children.remove(&tool_name) {
-            let _ = child.kill();
+            let _ = child.start_kill();
         }
 
         let mut command = Command::new(php_path);

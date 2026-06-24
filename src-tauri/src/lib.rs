@@ -1,7 +1,7 @@
 mod process;
+mod setup;
 
 use std::fs::{File, OpenOptions};
-use std::path::PathBuf;
 use std::io::Write;
 use std::process::Stdio;
 use tauri::{AppHandle, Emitter, Manager, State};
@@ -138,6 +138,7 @@ async fn check_tool_config_exists(install_path: String) -> Result<bool, String> 
 }
 
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 async fn query_save_data(
     php_path: String,
     script_path: String,
@@ -209,6 +210,7 @@ struct QueryProgressEvent {
 }
 
 #[tauri::command]
+#[allow(clippy::too_many_arguments)]
 async fn query_save_data_with_progress(
     app: AppHandle,
     php_path: String,
@@ -351,6 +353,21 @@ async fn query_save_data_with_progress(
     final_result.ok_or_else(|| "No result received from query".to_string())
 }
 
+#[tauri::command]
+async fn download_and_install_tools(
+    app: AppHandle,
+    config: Option<setup::SetupConfig>,
+) -> Result<setup::InstalledPaths, String> {
+    setup::download_and_install_tools(app, config).await
+}
+
+#[tauri::command]
+async fn check_for_updates(
+    current_version: Option<String>,
+) -> Result<setup::UpdateInfo, String> {
+    setup::check_for_updates(current_version).await
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -373,7 +390,9 @@ pub fn run() {
             load_tool_config,
             check_tool_config_exists,
             query_save_data,
-            query_save_data_with_progress
+            query_save_data_with_progress,
+            download_and_install_tools,
+            check_for_updates
         ])
         .setup(|app| {
             let log_path = app.path().app_log_dir()?
