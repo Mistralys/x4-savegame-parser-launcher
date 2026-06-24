@@ -34,7 +34,14 @@
     "config_missing": "Fichier de configuration manquant",
     "save_to_config": "Enregistrer dans config.json",
     "config_save_success": "Configuration enregistrée avec succès",
-    "config_load_success": "Configuration chargée avec succès"
+    "config_load_success": "Configuration chargée avec succès",
+    "sections": {
+      "appearance": "Apparence",
+      "environment": "Environnement & Outils",
+      "debugging": "Débogage",
+      "web_server": "Serveur Web",
+      "switch_theme": "Changer de thème"
+    }
   },
   "tools": {
     "start": "Démarrer",
@@ -129,5 +136,19 @@
     "modal_message": "Cet outil est désactivé car votre configuration est invalide. Veuillez vérifier la bannière d'erreur pour plus de détails.",
     "path_invalid": "Chemin invalide ou accès refusé",
     "config_write_failed": "Échec de la mise à jour du fichier config.json de l'outil. Veuillez vérifier les permissions."
+  },
+  "setup": {
+    "title": "Configuration automatique des outils",
+    "subtitle": "Téléchargez et installez PHP et le Savegame Monitor automatiquement.",
+    "button": "Configuration automatique",
+    "starting": "Démarrage de l'installation...",
+    "initializing": "Préparation de l'installation...",
+    "success": "Installation terminée !",
+    "error_title": "Échec de l'installation",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "update_check": "Vérifier les mises à jour",
+    "update_available": "Mise à jour disponible : {version}",
+    "up_to_date": "Vous êtes à jour ({version})"
   }
 }

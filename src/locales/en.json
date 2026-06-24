@@ -34,7 +34,14 @@
     "config_missing": "Configuration file missing",
     "save_to_config": "Save to config.json",
     "config_save_success": "Configuration saved successfully",
-    "config_load_success": "Configuration loaded successfully"
+    "config_load_success": "Configuration loaded successfully",
+    "sections": {
+      "appearance": "Appearance",
+      "environment": "Environment & Tools",
+      "debugging": "Debugging",
+      "web_server": "Web Server",
+      "switch_theme": "Switch Theme"
+    }
   },
   "tools": {
     "start": "Start",
@@ -131,5 +138,19 @@
     "modal_message": "This tool is disabled because your configuration is invalid. Please check the error banner for details.",
     "path_invalid": "Invalid path or permission denied",
     "config_write_failed": "Failed to update tool config.json. Please check permissions."
+  },
+  "setup": {
+    "title": "Auto-Setup Tools",
+    "subtitle": "Download and install PHP and the Savegame Monitor automatically.",
+    "button": "Auto-Setup Tools",
+    "starting": "Starting installation...",
+    "initializing": "Preparing installation...",
+    "success": "Installation complete!",
+    "error_title": "Installation Failed",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "update_check": "Check for Updates",
+    "update_available": "Update available: {version}",
+    "up_to_date": "You are up to date ({version})"
   }
 }

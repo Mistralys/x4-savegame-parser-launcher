@@ -34,7 +34,14 @@
     "config_missing": "Konfigurationsdatei fehlt",
     "save_to_config": "In config.json speichern",
     "config_save_success": "Konfiguration erfolgreich gespeichert",
-    "config_load_success": "Konfiguration erfolgreich geladen"
+    "config_load_success": "Konfiguration erfolgreich geladen",
+    "sections": {
+      "appearance": "Darstellung",
+      "environment": "Umgebung & Werkzeuge",
+      "debugging": "Fehlersuche",
+      "web_server": "Webserver",
+      "switch_theme": "Thema wechseln"
+    }
   },
   "tools": {
     "start": "Starten",
@@ -131,5 +138,19 @@
     "modal_message": "Dieses Tool ist deaktiviert, da Ihre Konfiguration ungültig ist. Bitte überprüfen Sie das Fehlerbanner für Details.",
     "path_invalid": "Ungültiger Pfad oder Zugriff verweigert",
     "config_write_failed": "config.json konnte nicht aktualisiert werden. Bitte Berechtigungen prüfen."
+  },
+  "setup": {
+    "title": "Auto-Setup Tools",
+    "subtitle": "PHP und den Savegame Monitor automatisch herunterladen und installieren.",
+    "button": "Auto-Setup Tools",
+    "starting": "Installation wird gestartet...",
+    "initializing": "Installation wird vorbereitet...",
+    "success": "Installation abgeschlossen!",
+    "error_title": "Installation fehlgeschlagen",
+    "retry": "Erneut versuchen",
+    "cancel": "Abbrechen",
+    "update_check": "Nach Updates suchen",
+    "update_available": "Update verfügbar: {version}",
+    "up_to_date": "Sie sind auf dem neuesten Stand ({version})"
   }
 }

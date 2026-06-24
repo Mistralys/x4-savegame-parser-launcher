@@ -3,9 +3,11 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { useConfig, AppConfig } from '../context/ConfigContext';
 import { useI18n } from '../context/I18nContext';
 import { useValidation } from '../context/ValidationContext';
-import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2, CheckCircle2, AlertCircle, Palette } from 'lucide-react';
+import { FolderOpen, FileCode, Terminal, Globe, Languages, Activity, Download, Save, Database, ShieldCheck, FileJson, Loader2, CheckCircle2, AlertCircle, Palette, Wand2 } from 'lucide-react';
 import { logger } from '../services/logger';
 import { ThemeToggle } from './ThemeToggle';
+import { SetupWizard } from './SetupWizard';
+import type { InstalledPaths } from './SetupWizard';
 
 export const SettingsView: React.FC = () => {
   const { config, updateConfig, loadFromToolConfig, saveToToolConfig, toolConfigExists } = useConfig();
@@ -14,6 +16,14 @@ export const SettingsView: React.FC = () => {
   const [isImporting, setIsImporting] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [feedback, setFeedback] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [showSetupWizard, setShowSetupWizard] = React.useState(false);
+
+  const needsSetup = !config.installPath || !config.phpPath || config.phpPath === 'php';
+
+  const handleWizardComplete = React.useCallback(async (paths: InstalledPaths) => {
+    await updateConfig({ phpPath: paths.php_path, installPath: paths.install_path });
+    setShowSetupWizard(false);
+  }, [updateConfig]);
 
   React.useEffect(() => {
     if (feedback) {
@@ -46,7 +56,13 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="relative space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {showSetupWizard && (
+        <SetupWizard
+          onComplete={handleWizardComplete}
+          onClose={() => setShowSetupWizard(false)}
+        />
+      )}
       <div className="grid grid-cols-1 gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Language Selection */}
@@ -73,10 +89,10 @@ export const SettingsView: React.FC = () => {
           <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
             <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
               <Palette className="mr-2 text-blue-500" size={18} />
-              Appearance
+              {t('settings.sections.appearance')}
             </label>
             <div className="flex items-center justify-between bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2">
-               <span className="text-sm font-medium text-gray-500">Switch Theme</span>
+               <span className="text-sm font-medium text-gray-500">{t('settings.sections.switch_theme')}</span>
                <ThemeToggle />
             </div>
           </div>
@@ -87,8 +103,17 @@ export const SettingsView: React.FC = () => {
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold flex items-center">
               <Terminal className="mr-2 text-blue-500" size={20} />
-              Environment & Tools
+              {t('settings.sections.environment')}
             </h3>
+            {needsSetup && (
+              <button
+                onClick={() => setShowSetupWizard(true)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm shadow-blue-500/20"
+              >
+                <Wand2 size={14} />
+                {t('setup.button')}
+              </button>
+            )}
           </div>
 
           <PathInput
@@ -165,7 +190,7 @@ export const SettingsView: React.FC = () => {
         <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
           <label className="flex items-center text-sm font-bold mb-4 text-gray-700 dark:text-gray-300">
             <Activity className="mr-2 text-blue-500" size={18} />
-            Debugging
+            {t('settings.sections.debugging')}
           </label>
           <button
             onClick={async () => {
@@ -196,7 +221,7 @@ export const SettingsView: React.FC = () => {
         <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
           <label className="flex items-center text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">
             <Globe className="mr-2 text-blue-500" size={18} />
-            Web Server
+            {t('settings.sections.web_server')}
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-2">
