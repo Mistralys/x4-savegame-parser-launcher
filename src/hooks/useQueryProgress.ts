@@ -1,12 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import type { QueryProgress } from '../types/shared';
 
-export interface QueryProgress {
-  inProgress: boolean;
-  operation: string | null;
-  message: string | null;
-  startTime: number | null;
-}
+// Re-export for consumers that currently import from this module.
+export type { QueryProgress } from '../types/shared';
 
 interface ProgressEvent {
   tool: string;

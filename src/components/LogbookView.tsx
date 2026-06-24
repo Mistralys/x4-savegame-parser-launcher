@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
 import { useQueryProgress } from '../hooks/useQueryProgress';
 import { useI18n } from '../context/I18nContext';
+import { useNotification } from '../context/NotificationContext';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
 import { Search, Filter, ScrollText, AlertCircle, Info, Target, Lightbulb, Coins, ShieldAlert, Zap, Skull, TrendingUp, Gift, Star, Box, Flag, Users, Factory, Wrench, Ship, Loader2 } from 'lucide-react';
@@ -18,6 +19,12 @@ interface LogbookEntry {
 
 interface LogbookViewProps {
   saveId: string;
+}
+
+interface CategoryMeta {
+  id: string;
+  label: string;
+  count: number;
 }
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -68,7 +75,9 @@ export const LogbookView: React.FC<LogbookViewProps> = ({ saveId }) => {
   const { query, isLoading, error: apiError } = useSaveData();
   const { inProgress: cachingInProgress, operation } = useQueryProgress();
   const { t } = useI18n();
+  const { showNotification } = useNotification();
   const [data, setData] = useState<LogbookEntry[]>([]);
+  const [categories, setCategories] = useState<CategoryMeta[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -131,6 +140,30 @@ export const LogbookView: React.FC<LogbookViewProps> = ({ saveId }) => {
   useEffect(() => {
     fetchLogbook();
   }, [fetchLogbook]);
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await query<CategoryMeta[]>(saveId, 'log-metadata');
+      if (response.success && Array.isArray(response.data) && response.data.length > 0) {
+        setCategories(response.data);
+        return;
+      }
+    } catch {
+      // metadata unavailable — use fallback silently
+    }
+    setCategories([]);
+    if (saveId) {
+      showNotification(
+        'info',
+        'Category Counts Unavailable',
+        'Re-extract this save to enable per-category entry counts in the logbook filter.'
+      );
+    }
+  }, [saveId, query, showNotification]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const columns = [
     {
@@ -215,9 +248,18 @@ export const LogbookView: React.FC<LogbookViewProps> = ({ saveId }) => {
               }}
             >
               <option value="all">{t('logbook.categories.all')}</option>
-              {Object.keys(CATEGORY_ICONS).map(cat => (
-                <option key={cat} value={cat}>{t(`logbook.categories.${cat}`)}</option>
-              ))}
+              {categories.length > 0
+                ? categories.map(cat => {
+                    const translationKey = `logbook.categories.${cat.id}`;
+                    const translated = t(translationKey);
+                    const label = translated !== translationKey ? translated : cat.label;
+                    return (
+                      <option key={cat.id} value={cat.id}>{label} ({cat.count})</option>
+                    );
+                  })
+                : Object.keys(CATEGORY_ICONS).map(cat => (
+                    <option key={cat} value={cat}>{t(`logbook.categories.${cat}`)}</option>
+                  ))}
             </select>
           </div>
         </div>
