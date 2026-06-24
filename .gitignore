@@ -22,4 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-X4-Savegame-Parser-Launcher-Manifest.md
+
+# Ledger workflow temporary files
+/docs/agents/**/work.md
+/docs/agents/**/work
+/docs/agents/**/design-review.md
+/docs/agents/**/audit.md
+/docs/agents/**/work-packages-draft.md
+/docs/agents/**/pipeline-configuration.md
+/docs/agents/**/dependency-analysis.md

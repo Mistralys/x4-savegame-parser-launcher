@@ -44,6 +44,19 @@
    - Data fetching blocks until PHP completes (returns final result)
    - Banner automatically hides via `useQueryProgress` state management
 
+## LogbookView: Category Dropdown Population
+1. **Trigger:** `LogbookView` mounts or `saveId` changes → `fetchCategories` callback is invoked.
+2. **Metadata Query:** `fetchCategories` calls `useSaveData` to invoke `query_save_data_with_progress` with command `log-metadata` against the current save.
+3. **Success Path (dynamic):**
+   - The PHP backend returns an array of `{ id, label, count }` objects.
+   - Categories are stored in component state.
+   - The dropdown renders each entry as `"<translated label> (<count>)"` — the translation key `t('logbook.categories.<id>')` is used when registered; otherwise the backend `label` field is the display text.
+4. **Fallback Path (empty or error):**
+   - If the response is an empty array or the query throws, `categories` is set to `[]`.
+   - The dropdown falls back to `Object.keys(CATEGORY_ICONS)` so all known category types remain selectable (no counts shown).
+   - If a `saveId` is present, a non-blocking info notification is fired: "Category counts unavailable — re-extract the save to enable them."
+5. **Icon/Color Assignment:** `CATEGORY_ICONS` and `CATEGORY_COLORS` maps are not modified by this flow; icon and color lookup is always keyed by category `id` independent of the dropdown source.
+
 ## Configuration Persistence
 1. **Loading:** `ConfigProvider` uses `tauri-plugin-store` to load `settings.json` on mount.
 2. **Migration:** On load, the legacy `viewerUrl` is automatically migrated to `viewerHost` and `viewerPort`.
@@ -66,3 +79,19 @@
 1. **Backend Init:** `main.rs` -> `lib::run()` -> Plugin setup (Store, FS, etc.) -> ProcessManager setup.
 2. **Frontend Init:** `main.tsx` -> Multiple Providers -> `App`.
 3. **Tool Cleanup:** When the window is destroyed, `on_window_event` in Rust triggers `stop_all()` to kill any orphan PHP processes.
+
+## Installation Wizard Flow
+1. **Trigger:** User clicks **Auto-Setup Tools** in `SettingsView` "Environment & Tools" section. The button is only rendered when `config.installPath` is empty or `config.phpPath` is unset/default (`'php'`).
+2. **Modal Open:** `SettingsView` sets `showSetupWizard: true`, rendering `SetupWizard` as an absolute overlay inside the `relative` settings container.
+3. **Listener Registration:** On mount, `SetupWizard` calls `listen('setup-progress', ...)` to subscribe to Tauri events before invoking the command.
+4. **Installation Invoked:** `SetupWizard` calls `invoke('download_and_install_tools')`. Rust downloads PHP NTS x64 and the latest monitor release from GitHub, extracts them under `<app_data_dir>/tools/`, and emits `setup-progress` events at each stage:
+   - `{ step: 'detecting', message: '...', percent: 5 }`
+   - `{ step: 'fetching_release', message: '...', percent: 10-20 }`
+   - `{ step: 'downloading_monitor', message: '...', percent: 25-45 }`
+   - `{ step: 'downloading_php', message: '...', percent: 50-65 }`
+   - `{ step: 'extracting', message: '...', percent: 70-85 }`
+   - `{ step: 'complete', message: 'Setup complete!', percent: 100 }`
+5. **Progress Display:** `SetupWizard` updates `progress` state on each event, rendering a progress bar and step message in real-time.
+6. **Success:** `invoke` resolves with `InstalledPaths { php_path, install_path }`. `SetupWizard` calls `onComplete(paths)` → `SettingsView.handleWizardComplete` calls `updateConfig({ phpPath, installPath })` and closes the modal.
+7. **Error:** If `invoke` rejects, `SetupWizard` stores the error string and renders it with a **Retry** button (re-invokes `download_and_install_tools`) and a **Cancel** button (closes modal).
+8. **Updates Check:** A **Check for Updates** button in `SetupWizard` calls `invoke('check_for_updates', { current_version: null })` and displays inline `UpdateInfo`.

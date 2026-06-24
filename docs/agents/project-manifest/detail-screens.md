@@ -97,7 +97,32 @@ interface LogbookEntry {
 
 ---
 
-## 5. Shared UI Components
+## 5. Setup Wizard (`SetupWizard.tsx`)
+
+Modal overlay for automated PHP and Savegame Monitor installation.
+
+- **Purpose:** Guide users through a one-click download and installation of PHP NTS and the monitor tool, removing the need for manual path configuration.
+- **Trigger Condition:** Rendered by `SettingsView` when `config.installPath` is empty or `config.phpPath` is unset/default (`'php'`). Button labelled `t('setup.button')` appears in the "Environment & Tools" section header.
+- **Props:**
+  - `onComplete: (paths: InstalledPaths) => void` — called with `{ php_path, install_path }` on successful installation; parent updates `ConfigContext`.
+  - `onClose: () => void` — called on cancel or close; parent sets `showSetupWizard: false`.
+- **State:**
+  - `isRunning: boolean` — true while `download_and_install_tools` is in flight.
+  - `progress: SetupProgress | null` — latest `setup-progress` event payload (`step`, `message`, `percent`).
+  - `error: string | null` — error message on failure.
+  - `isCheckingUpdates: boolean` — true while `check_for_updates` is in flight.
+  - `updateInfo: UpdateInfo | null` — result of the update check.
+- **Behaviour:**
+  - Registers a `setup-progress` Tauri event listener before invoking the command on mount.
+  - Shows real-time progress bar driven by `percent` (0–100).
+  - On error: displays error text with a **Retry** button (re-invokes `download_and_install_tools`) and a **Cancel** button.
+  - Secondary **Check for Updates** button invokes `check_for_updates` with inline result display.
+  - Close (×) button is hidden while installation is in progress.
+- **Exported types:** `SetupProgress`, `InstalledPaths`, `SetupWizardProps`.
+
+---
+
+## 6. Shared UI Components
 
 - **`DataTable`**: Generic table wrapper with dark-mode support and standard cell styling.
 - **`DataPagination`**: Sticky footer navigation with "Jump to Page" capability.

@@ -7,7 +7,7 @@
 
 ## Backend (Rust)
 - **Error Handling:** All `#[tauri::command]` functions must return `Result<T, E>`.
-- **Project Structure:** `main.rs` must remain minimal; all business logic, command definitions, and state setup belong in `lib.rs` or specialized modules like `process.rs`.
+- **Project Structure:** `main.rs` must remain minimal; all business logic, command definitions, and state setup belong in `lib.rs` or specialized modules like `process.rs` and `setup.rs`.
 - **Process Management:** External processes must be managed via the `ProcessManager` to ensure lifecycle tracking and cleanup.
 - **Async:** Use `tokio` for non-blocking I/O and process reading.
 

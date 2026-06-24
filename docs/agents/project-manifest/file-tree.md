@@ -63,6 +63,7 @@
 │   │   ├── SaveDataViewer.tsx
 │   │   ├── SaveSelector.tsx
 │   │   ├── SettingsView.tsx
+│   │   ├── SetupWizard.tsx
 │   │   ├── ShipLossesView.tsx
 │   │   ├── ThemeToggle.tsx
 │   │   ├── ToolView.tsx
@@ -78,7 +79,10 @@
 │   │   └── ValidationContext.tsx
 │   ├── hooks/
 │   │   ├── useSaveData.ts
+│   │   ├── useQueryProgress.ts
 │   │   └── useTheme.ts
+│   ├── types/
+│   │   └── shared.ts          # Shared interfaces across component/hook boundaries (SetupProgress, InstalledPaths, UpdateInfo, QueryProgress)
 │   ├── locales/
 │   │   ├── de.json
 │   │   ├── en.json
@@ -101,7 +105,8 @@
 │   ├── src/
 │   │   ├── lib.rs
 │   │   ├── main.rs
-│   │   └── process.rs
+│   │   ├── process.rs
+│   │   └── setup.rs
 │   └── tauri.conf.json
 ├── tsconfig.json
 ├── tsconfig.node.json

@@ -24,6 +24,7 @@
   - `main.rs`: Entry point and application setup.
   - `lib.rs`: Command registration and plugin initialization.
   - `process.rs`: Logic for managing external child processes (PHP tools).
+  - `setup.rs`: Tool installation wizard — downloads PHP and the savegame monitor, extracts them under `<app_data_dir>/tools/`, and exposes `download_and_install_tools` / `check_for_updates` as Tauri commands.
 - **Inter-Process Communication (IPC):** 
   - Frontend uses `invoke` to call Rust commands.
   - Backend uses `emit` to stream stdout/stderr from child processes back to the UI.
@@ -43,3 +44,7 @@
   - Functional components with TypeScript interfaces for props.
   - Responsive design using Tailwind utility classes.
   - Native feel integration using `data-tauri-drag-region` for custom title bars.
+- **Shared Type Module (`src/types/shared.ts`):**
+  - TypeScript interfaces shared across more than one module (components, hooks) live in `src/types/shared.ts`.
+  - This includes both direct Tauri IPC payload shapes (e.g. `SetupProgress`, `InstalledPaths`, `UpdateInfo`) and React state shapes derived from Tauri events (e.g. `QueryProgress`).
+  - Files that were the original home of a moved type keep a re-export for backward compatibility.
