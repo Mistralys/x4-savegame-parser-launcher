@@ -1,3 +1,4 @@
+
 # Logbook Category Counts & Backend-Driven Labels
 
 **Status**: Ready for Implementation  
