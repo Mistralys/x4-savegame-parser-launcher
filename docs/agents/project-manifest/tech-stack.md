@@ -48,3 +48,17 @@
   - TypeScript interfaces shared across more than one module (components, hooks) live in `src/types/shared.ts`.
   - This includes both direct Tauri IPC payload shapes (e.g. `SetupProgress`, `InstalledPaths`, `UpdateInfo`) and React state shapes derived from Tauri events (e.g. `QueryProgress`).
   - Files that were the original home of a moved type keep a re-export for backward compatibility.
+
+### Hooks
+
+Custom React hooks live in `src/hooks/`.
+
+#### `useDebounce`
+
+```typescript
+function useDebounce<T>(value: T, delay: number): T
+```
+
+**Purpose:** Debounces a rapidly-changing value (typically a search input string) so that downstream filtering logic only re-runs after the user pauses typing for `delay` milliseconds. Implemented with `useState` + `useEffect` using a `setTimeout`/`clearTimeout` cleanup pattern.
+
+**Used by:** `OwnedShipsView.tsx` (search input, 300 ms), `StationsView.tsx` (search and class-search inputs, 300 ms each).

@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSaveData } from '../hooks/useSaveData';
 import { useProcess } from '../context/ProcessContext';
+import { useI18n } from '../context/I18nContext';
 import { RefreshCw, User, Coins, Calendar, MapPin, Hash, ShieldCheck, Database, Zap, LayoutDashboard, Ghost, Ship, Factory, ScrollText, ChevronLeft } from 'lucide-react';
 import { SaveSelector } from './SaveSelector';
 import { ShipLossesView } from './ShipLossesView';
 import { OwnedShipsView } from './OwnedShipsView';
 import { LogbookView } from './LogbookView';
+import { StationsView } from './StationsView';
 
 interface SaveInfo {
   saveName: string;
@@ -61,6 +63,7 @@ const CategoryTab: React.FC<{
 export const SaveDataViewer: React.FC = () => {
   const { query, isLoading, error } = useSaveData();
   const { tools } = useProcess();
+  const { t } = useI18n();
   const [selectedSaveId, setSelectedSaveId] = useState<string | null>(null);
   const [activeScreen, setActiveScreen] = useState<'overview' | 'ship-losses' | 'ships' | 'stations' | 'logbook'>('overview');
   const [saveInfo, setSaveInfo] = useState<SaveInfo | null>(null);
@@ -133,32 +136,31 @@ export const SaveDataViewer: React.FC = () => {
         <nav className="flex items-center gap-2 p-1.5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-800 w-fit">
            <CategoryTab 
               icon={<LayoutDashboard size={16} />} 
-              label="Overview" 
+              label={t('viewer.tabs.overview')} 
               active={activeScreen === 'overview'} 
               onClick={() => setActiveScreen('overview')} 
            />
            <CategoryTab 
               icon={<Ghost size={16} />} 
-              label="Ship Losses" 
+              label={t('viewer.tabs.ship_losses')} 
               active={activeScreen === 'ship-losses'} 
               onClick={() => setActiveScreen('ship-losses')} 
            />
            <CategoryTab
               icon={<Ship size={16} />}
-              label="Owned Ships"
+              label={t('viewer.tabs.owned_ships')}
               active={activeScreen === 'ships'}
               onClick={() => setActiveScreen('ships')}
            />
            <CategoryTab 
               icon={<Factory size={16} />} 
-              label="Stations" 
-              disabled
+              label={t('viewer.tabs.stations')} 
               active={activeScreen === 'stations'} 
               onClick={() => setActiveScreen('stations')} 
            />
            <CategoryTab
               icon={<ScrollText size={16} />}
-              label="Logbook"
+              label={t('viewer.tabs.logbook')}
               active={activeScreen === 'logbook'}
               onClick={() => setActiveScreen('logbook')}
            />
@@ -172,9 +174,9 @@ export const SaveDataViewer: React.FC = () => {
               <ShieldCheck size={20} />
            </div>
            <div>
-              <h4 className="text-sm font-bold text-yellow-800 dark:text-yellow-400">Save not extracted</h4>
+              <h4 className="text-sm font-bold text-yellow-800 dark:text-yellow-400">{t('viewer.not_extracted_title')}</h4>
               <p className="text-xs text-yellow-700 dark:text-yellow-500/80 mt-0.5">
-                This savegame has not been processed yet. Start the Monitor tool to begin extraction.
+                {t('viewer.not_extracted_message')}
               </p>
            </div>
         </div>
@@ -185,17 +187,17 @@ export const SaveDataViewer: React.FC = () => {
         {isLoading && activeScreen === 'overview' && !saveInfo ? (
           <div className="flex flex-col items-center justify-center p-20 gap-4">
             <RefreshCw className="animate-spin text-blue-500 opacity-20" size={48} />
-            <p className="text-sm text-gray-400 font-medium italic">Retrieving save information...</p>
+            <p className="text-sm text-gray-400 font-medium italic">{t('viewer.loading')}</p>
           </div>
         ) : error && activeScreen === 'overview' ? (
           <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50">
-            <h3 className="text-red-600 dark:text-red-400 font-bold mb-2">Error Loading Save Data</h3>
+            <h3 className="text-red-600 dark:text-red-400 font-bold mb-2">{t('viewer.error_title')}</h3>
             <p className="text-sm text-red-500">{error}</p>
             <button 
               onClick={() => fetchSaveInfo(selectedSaveId)}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600 transition-colors"
             >
-              Retry
+              {t('viewer.retry')}
             </button>
           </div>
         ) : (
@@ -204,39 +206,39 @@ export const SaveDataViewer: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <InfoCard 
                   icon={<User className="text-blue-500" size={20} />}
-                  label="Player Name"
+                  label={t('viewer.overview.player_name')}
                   value={saveInfo.playerName}
                 />
                 <InfoCard 
                   icon={<Coins className="text-yellow-500" size={20} />}
-                  label="Credits"
+                  label={t('viewer.overview.credits')}
                   value={`${saveInfo.moneyFormatted} Cr`}
                 />
                 <InfoCard 
                   icon={<Calendar className="text-green-500" size={20} />}
-                  label="Save Date"
+                  label={t('viewer.overview.save_date')}
                   value={new Date(saveInfo.saveDate).toLocaleString()}
                 />
                 <InfoCard 
                   icon={<MapPin className="text-purple-500" size={20} />}
-                  label="Game Name"
+                  label={t('viewer.overview.game_name')}
                   value={saveInfo.saveName}
                 />
                 <InfoCard 
                   icon={<ShieldCheck className="text-indigo-500" size={20} />}
-                  label="Game GUID"
+                  label={t('viewer.overview.game_guid')}
                   value={saveInfo.gameGUID}
                   className="lg:col-span-2"
                 />
                 <InfoCard 
                   icon={<Hash className="text-orange-500" size={20} />}
-                  label="Game Code"
+                  label={t('viewer.overview.game_code')}
                   value={saveInfo.gameCode.toString()}
                 />
                 {saveInfo.extractionDurationFormatted && (
                   <InfoCard 
                     icon={<Zap className="text-yellow-400" size={20} />}
-                    label="Extraction Time"
+                    label={t('viewer.overview.extraction_time')}
                     value={saveInfo.extractionDurationFormatted}
                   />
                 )}
@@ -249,6 +251,10 @@ export const SaveDataViewer: React.FC = () => {
 
             {activeScreen === 'ships' && selectedSaveId && (
                <OwnedShipsView saveId={selectedSaveId} />
+            )}
+
+            {activeScreen === 'stations' && selectedSaveId && (
+               <StationsView saveId={selectedSaveId} />
             )}
 
             {activeScreen === 'logbook' && selectedSaveId && (

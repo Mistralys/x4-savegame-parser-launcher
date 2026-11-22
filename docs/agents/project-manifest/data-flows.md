@@ -1,5 +1,20 @@
 # Key Data Flows
 
+## Paginated Query Flow (List Screens)
+
+This pattern is shared by all paginated list screens: `OwnedShipsView`, `ShipLossesView`, and `StationsView`. Each follows the same five-step cycle from user interaction to rendered table.
+
+1. **Trigger** — The user navigates to a list screen (tab click) or changes a filter/search value. A `useEffect` with `[fetchXxx]` dependency fires, or a debounce timeout fires and resets the `debouncedSearch` state, which in turn triggers the `useCallback` dependency chain.
+2. **Filter Composition** — A `buildFilter()` helper (or inline conditions array) constructs the JMESPath expression from active UI state:
+   - Active toggle conditions (e.g., `owner=='player'`) are pushed to a `conditions` array.
+   - Debounced text inputs produce `contains_i(field, 'term')` predicates.
+   - The final expression is assembled as `[?<cond1> && <cond2>] | sort_by([*], &field)` (or `[*] | sort_by([*], &field)` when no conditions are active).
+3. **`query<T>()` Call** — The component calls `useSaveData().query<T>(saveId, command, { filter, limit, offset })`, which invokes the Tauri `query_save_data_with_progress` command. The PHP `query.php` script runs the JMESPath expression server-side against the extracted save JSON.
+4. **State Update** — On success, the component writes `response.data` to its `data` state and `response.pagination` to its `pagination` state.
+5. **Render** — `DataTable<T>` renders the `data` array with typed column accessors. `DataPagination` renders below the table when `pagination` is non-null; page changes call `setOffset(newOffset)`, re-triggering the fetch cycle from step 1.
+
+---
+
 ## IPC: Frontend to Backend (Invoke)
 1. **Trigger:** A React component calls `invoke("command_name", { args })`.
 2. **Backend Processing:** Tauri routes the call to the corresponding function in `lib.rs` marked with `#[tauri::command]`.

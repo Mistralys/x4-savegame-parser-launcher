@@ -75,6 +75,10 @@
     "filter_by_role": "Filtrer par rôle",
     "filter_by_size": "Filtrer par taille",
     "filter_by_faction": "Filtrer par faction",
+    "role": "Rôle",
+    "faction": "Faction",
+    "unknown_sector": "Secteur inconnu",
+    "unknown_zone": "Zone inconnue",
     "filters": {
       "all": "Tous les vaisseaux",
       "combat": "Combat",
@@ -90,6 +94,56 @@
         "xl": "XL"
       }
     }
+  },
+  "ship_losses": {
+    "title": "Pertes de vaisseaux",
+    "subtitle": "Historique des pertes de l'univers",
+    "empty": "Aucun vaisseau n'a été perdu dans cette sauvegarde.",
+    "time": "Temps",
+    "ship_name": "Nom du vaisseau",
+    "location": "Emplacement",
+    "destroyed_by": "Détruit par",
+    "category": "Catégorie"
+  },
+  "viewer": {
+    "tabs": {
+      "overview": "Aperçu",
+      "ship_losses": "Pertes de vaisseaux",
+      "owned_ships": "Vaisseaux possédés",
+      "stations": "Stations",
+      "logbook": "Journal de bord"
+    },
+    "overview": {
+      "player_name": "Nom du joueur",
+      "credits": "Crédits",
+      "save_date": "Date de sauvegarde",
+      "game_name": "Nom du jeu",
+      "game_guid": "GUID du jeu",
+      "game_code": "Code du jeu",
+      "extraction_time": "Heure d'extraction"
+    },
+    "not_extracted_title": "Sauvegarde non extraite",
+    "not_extracted_message": "Cette sauvegarde n'a pas encore été traitée. Démarrez l'outil Moniteur pour commencer l'extraction.",
+    "loading": "Récupération des informations de sauvegarde...",
+    "error_title": "Erreur de chargement des données",
+    "retry": "Réessayer"
+  },
+  "stations": {
+    "title": "Stations",
+    "subtitle": "Aperçu de vos actifs de stations",
+    "empty": "Vous ne possédez aucune station dans cette sauvegarde.",
+    "empty_all": "Aucune station trouvée dans cette sauvegarde.",
+    "code": "Code",
+    "name": "Nom de la station",
+    "type": "Type",
+    "state": "État",
+    "state_normal": "Normal",
+    "state_wreck": "Épave",
+    "show_all": "Afficher toutes les stations",
+    "player_only": "Stations du joueur",
+    "search_placeholder": "Rechercher par nom ou code...",
+    "class_search_label": "Filtrer par classe",
+    "class_search_placeholder": "Filtrer par classe..."
   },
   "logbook": {
     "title": "Journal de bord",

@@ -12,7 +12,7 @@ The `SaveDataViewer` implements a **Master-Detail** pattern:
 - 📊 **Overview**: Basic savegame metadata (Player name, credits, date).
 - 👻 **Ship Losses**: History of destroyed ships in the universe.
 - 🚢 **Owned Ships**: Detailed list of player fleet assets.
-- 🏭 **Stations**: (Planned) Station and factory overview.
+- 🏭 **Stations**: Station and factory overview.
 - 📜 **Logbook**: Historical game event log.
 
 ---
@@ -46,7 +46,7 @@ Displays player-owned fleet assets with advanced filtering.
 
 - **Source API**: `query_save_data` with command `ships`.
 - **Base Filter**: `[?owner=='player']`.
-- **Search**: Case-insensitive substring match on `name` or `code`.
+- **Search**: Case-insensitive substring match on `name` or `code`. Input is debounced at 300 ms via `useDebounce`.
 
 ### Data Schema
 ```typescript
@@ -75,7 +75,46 @@ The view implements dynamic JMESPath generation based on UI filters:
 
 ---
 
-## 4. Logbook View (`LogbookView.tsx`)
+## 4. Stations View (`StationsView.tsx`)
+
+Displays player-owned (or all universe) stations with search and class filtering.
+
+- **Source API**: `query_save_data` with command `stations`.
+- **Base Filter**: `[?owner=='player']` (default); drops owner guard when "Show All" toggle is active.
+- **Search**: Case-insensitive substring match on `name` or `code` via `contains_i`. Input is debounced at 300 ms via `useDebounce`.
+- **Class Filter**: Case-insensitive substring match on `class` via `contains_i` (free-text input; `class` is always an empty string in current game data — filter degrades gracefully). Input is debounced at 300 ms via `useDebounce`.
+- **Wreck Badge**: Stations with `state === 'wreck'` display an amber pill badge in the Name column.
+
+### Data Schema
+```typescript
+interface StationData {
+  componentID: string;      // Unique hex component reference (e.g., '[0x7cb78]')
+  connectionID: string;     // Always 'stations'
+  parentComponent: string;  // Zone reference encoding station location (e.g., 'zone:[0x7c45f]')
+  class: string;            // Station class macro — always empty string in current game data
+  code: string;             // Faction-prefixed station code (e.g., 'VYD-141')
+  name: string;             // User-visible station name; empty for NPC stations
+  owner: string;            // Faction/owner identifier (e.g., 'player', 'court', 'arg')
+  macro: string;            // Station type macro (e.g., 'station_gen_factory_base_01_macro')
+  state: string;            // Operational state: 'normal' | 'wreck'
+  ships?: string[];         // Optional: component IDs of assigned/docked ships
+}
+```
+
+### Absent Fields
+The `sector` and `zone` fields are **not returned** by the CLI. Location is encoded only via `parentComponent` as a zone reference. No Sector column or sector filter is implemented.
+
+### Columns
+| Column | Field | Notes |
+|--------|-------|-------|
+| Code | `code` | Faction-prefixed short code |
+| Station Name | `name` | Falls back to `code` when empty (NPC stations) |
+| Type | `macro` | Display value has the `_macro` game-engine suffix stripped (e.g. `station_gen_factory_base_01_macro` renders as `station_gen_factory_base_01`). The raw macro string is preserved in the cell's `title` tooltip. |
+| State | `state` | Badge: green for normal, amber for wreck |
+
+---
+
+## 5. Logbook View (`LogbookView.tsx`)
 
 Displays historical game event log.
 
@@ -97,7 +136,7 @@ interface LogbookEntry {
 
 ---
 
-## 5. Setup Wizard (`SetupWizard.tsx`)
+## 6. Setup Wizard (`SetupWizard.tsx`)
 
 Modal overlay for automated PHP and Savegame Monitor installation.
 
@@ -122,7 +161,7 @@ Modal overlay for automated PHP and Savegame Monitor installation.
 
 ---
 
-## 6. Shared UI Components
+## 7. Shared UI Components
 
 - **`DataTable`**: Generic table wrapper with dark-mode support and standard cell styling.
 - **`DataPagination`**: Sticky footer navigation with "Jump to Page" capability.

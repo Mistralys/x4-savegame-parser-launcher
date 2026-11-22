@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSaveData, Pagination } from '../hooks/useSaveData';
+import { useI18n } from '../context/I18nContext';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
 import { Ghost, ShieldAlert, RefreshCw } from 'lucide-react';
@@ -20,6 +21,7 @@ interface ShipLossesViewProps {
 
 export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
   const { query, isLoading } = useSaveData();
+  const { t } = useI18n();
   const [data, setData] = useState<ShipLoss[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [offset, setOffset] = useState(0);
@@ -55,31 +57,31 @@ export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
 
   const columns = [
     {
-      header: 'Time',
+      header: t('ship_losses.time'),
       accessor: (item: ShipLoss) => (
         <span className="text-gray-400 font-mono text-[11px]">{item.timeFormatted}</span>
       )
     },
     {
-      header: 'Ship Name',
+      header: t('ship_losses.ship_name'),
       accessor: (item: ShipLoss) => (
         <span className="font-bold text-gray-800 dark:text-gray-200">{item.shipName}</span>
       )
     },
     {
-      header: 'Location',
+      header: t('ship_losses.location'),
       accessor: (item: ShipLoss) => (
         <span>{item.location}</span>
       )
     },
     {
-      header: 'Destroyed By',
+      header: t('ship_losses.destroyed_by'),
       accessor: (item: ShipLoss) => (
         <span className="text-red-500 font-medium">{item.destroyedBy || 'Unknown'}</span>
       )
     },
     {
-      header: 'Category',
+      header: t('ship_losses.category'),
       accessor: (item: ShipLoss) => (
         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
           item.category === 'combat' ? 'bg-red-500/10 text-red-500' : 'bg-orange-500/10 text-orange-500'
@@ -98,8 +100,8 @@ export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
             <Ghost size={20} />
           </div>
           <div>
-            <p className="text-sm font-bold">Ship Losses</p>
-            <p className="text-[10px] text-gray-400">Universe-wide attrition history</p>
+            <p className="text-sm font-bold">{t('ship_losses.title')}</p>
+            <p className="text-[10px] text-gray-400">{t('ship_losses.subtitle')}</p>
           </div>
         </div>
 
@@ -138,7 +140,7 @@ export const ShipLossesView: React.FC<ShipLossesViewProps> = ({ saveId }) => {
           data={data}
           isLoading={isLoading}
           getRowKey={(item) => `${item.time}-${item.shipName}`}
-          emptyMessage="No ships have been lost in this savegame yet."
+          emptyMessage={t('ship_losses.empty')}
         />
         {pagination && (
           <DataPagination 

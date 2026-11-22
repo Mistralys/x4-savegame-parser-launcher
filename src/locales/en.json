@@ -75,6 +75,10 @@
     "filter_by_role": "Filter by Role",
     "filter_by_size": "Filter by Size",
     "filter_by_faction": "Filter by Faction",
+    "role": "Role",
+    "faction": "Faction",
+    "unknown_sector": "Unknown Sector",
+    "unknown_zone": "Unknown Zone",
     "filters": {
       "all": "All Ships",
       "combat": "Combat",
@@ -90,6 +94,56 @@
         "xl": "XL"
       }
     }
+  },
+  "ship_losses": {
+    "title": "Ship Losses",
+    "subtitle": "Universe-wide attrition history",
+    "empty": "No ships have been lost in this savegame yet.",
+    "time": "Time",
+    "ship_name": "Ship Name",
+    "location": "Location",
+    "destroyed_by": "Destroyed By",
+    "category": "Category"
+  },
+  "viewer": {
+    "tabs": {
+      "overview": "Overview",
+      "ship_losses": "Ship Losses",
+      "owned_ships": "Owned Ships",
+      "stations": "Stations",
+      "logbook": "Logbook"
+    },
+    "overview": {
+      "player_name": "Player Name",
+      "credits": "Credits",
+      "save_date": "Save Date",
+      "game_name": "Game Name",
+      "game_guid": "Game GUID",
+      "game_code": "Game Code",
+      "extraction_time": "Extraction Time"
+    },
+    "not_extracted_title": "Save not extracted",
+    "not_extracted_message": "This savegame has not been processed yet. Start the Monitor tool to begin extraction.",
+    "loading": "Retrieving save information...",
+    "error_title": "Error Loading Save Data",
+    "retry": "Retry"
+  },
+  "stations": {
+    "title": "Stations",
+    "subtitle": "Overview of your station assets",
+    "empty": "You do not own any stations in this savegame yet.",
+    "empty_all": "No stations found in this savegame.",
+    "code": "Code",
+    "name": "Station Name",
+    "type": "Type",
+    "state": "State",
+    "state_normal": "Normal",
+    "state_wreck": "Wreck",
+    "show_all": "Show All Stations",
+    "player_only": "Player Stations",
+    "search_placeholder": "Search by name or code...",
+    "class_search_label": "Filter by Class",
+    "class_search_placeholder": "Filter by class..."
   },
   "logbook": {
     "title": "Logbook",

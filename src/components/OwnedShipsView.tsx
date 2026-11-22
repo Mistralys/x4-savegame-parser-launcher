@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useSaveData, Pagination } from '../hooks/useSaveData';
 import { useI18n } from '../context/I18nContext';
+import { useDebounce } from '../hooks/useDebounce';
 import { DataTable } from './DataTable';
 import { DataPagination } from './DataPagination';
 import { Ship, RefreshCw, Search, X, ChevronDown } from 'lucide-react';
@@ -35,18 +36,14 @@ export const OwnedShipsView: React.FC<OwnedShipsViewProps> = ({ saveId }) => {
   const [sizeFilter, setSizeFilter] = useState<'all' | 's' | 'm' | 'l' | 'xl'>('all');
   const [factionFilter, setFactionFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
   const limit = 20;
 
-  // Simple debounce for search input
+  // Reset offset when debounced search value changes
   useEffect(() => {
-      const timer = setTimeout(() => {
-          setDebouncedSearch(searchQuery);
-          setOffset(0); // Reset pagination on search
-      }, 300);
-      return () => clearTimeout(timer);
-  }, [searchQuery]);
+    setOffset(0);
+  }, [debouncedSearch]);
 
   const availableFactions = useMemo(() => {
       return [
@@ -130,7 +127,7 @@ export const OwnedShipsView: React.FC<OwnedShipsViewProps> = ({ saveId }) => {
       )
     },
     {
-      header: 'Role',
+      header: t('ships.role'),
       accessor: (item: ShipData) => (
         <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/10 text-blue-500">
           {item.hull} {item['hull-type']}
@@ -142,16 +139,16 @@ export const OwnedShipsView: React.FC<OwnedShipsViewProps> = ({ saveId }) => {
       accessor: (item: ShipData) => (
         <div className="flex flex-col max-w-[200px]">
           <span className="text-xs text-gray-600 dark:text-gray-400 truncate" title={item.sector}>
-            {item.sector?.split(' ').slice(1).join(' ') || 'Unknown Sector'}
+            {item.sector?.split(' ').slice(1).join(' ') || t('ships.unknown_sector')}
           </span>
           <span className="text-[10px] text-gray-400 truncate" title={item.zone}>
-            {item.zone?.split(' ').slice(1).join(' ') || 'Unknown Zone'}
+            {item.zone?.split(' ').slice(1).join(' ') || t('ships.unknown_zone')}
           </span>
         </div>
       )
     },
     {
-        header: 'Faction',
+        header: t('ships.faction'),
         accessor: (item: ShipData) => (
           <span className="text-[10px] font-bold uppercase text-gray-400">{item['build-faction']}</span>
         )

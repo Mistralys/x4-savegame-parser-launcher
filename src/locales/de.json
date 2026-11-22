@@ -75,6 +75,10 @@
     "filter_by_role": "Nach Rolle filtern",
     "filter_by_size": "Nach Größe filtern",
     "filter_by_faction": "Nach Fraktion filtern",
+    "role": "Rolle",
+    "faction": "Fraktion",
+    "unknown_sector": "Unbekannter Sektor",
+    "unknown_zone": "Unbekannte Zone",
     "filters": {
       "all": "Alle Schiffe",
       "combat": "Kampf",
@@ -90,6 +94,56 @@
         "xl": "XL"
       }
     }
+  },
+  "ship_losses": {
+    "title": "Schiffsverluste",
+    "subtitle": "Universelle Verlusthistorie",
+    "empty": "In diesem Spielstand wurden noch keine Schiffe verloren.",
+    "time": "Zeit",
+    "ship_name": "Schiffsname",
+    "location": "Ort",
+    "destroyed_by": "Zerstört durch",
+    "category": "Kategorie"
+  },
+  "viewer": {
+    "tabs": {
+      "overview": "Übersicht",
+      "ship_losses": "Schiffsverluste",
+      "owned_ships": "Eigene Schiffe",
+      "stations": "Stationen",
+      "logbook": "Logbuch"
+    },
+    "overview": {
+      "player_name": "Spielername",
+      "credits": "Credits",
+      "save_date": "Speicherdatum",
+      "game_name": "Spielname",
+      "game_guid": "Spiel-GUID",
+      "game_code": "Spielcode",
+      "extraction_time": "Extraktionszeit"
+    },
+    "not_extracted_title": "Spielstand nicht extrahiert",
+    "not_extracted_message": "Dieser Spielstand wurde noch nicht verarbeitet. Starten Sie das Monitor-Tool, um die Extraktion zu beginnen.",
+    "loading": "Spielstandinformationen werden abgerufen...",
+    "error_title": "Fehler beim Laden der Spielstanddaten",
+    "retry": "Erneut versuchen"
+  },
+  "stations": {
+    "title": "Stationen",
+    "subtitle": "Übersicht Ihrer Stationsanlagen",
+    "empty": "Sie besitzen in diesem Spielstand noch keine Stationen.",
+    "empty_all": "Keine Stationen in diesem Spielstand gefunden.",
+    "code": "Code",
+    "name": "Stationsname",
+    "type": "Typ",
+    "state": "Zustand",
+    "state_normal": "Normal",
+    "state_wreck": "Wrack",
+    "show_all": "Alle Stationen anzeigen",
+    "player_only": "Spieler-Stationen",
+    "search_placeholder": "Nach Name oder Code suchen...",
+    "class_search_label": "Nach Klasse filtern",
+    "class_search_placeholder": "Nach Klasse filtern..."
   },
   "logbook": {
     "title": "Logbuch",

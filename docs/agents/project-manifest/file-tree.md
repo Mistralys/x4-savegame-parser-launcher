@@ -19,7 +19,17 @@
 │       │   │   └── wp3-github-action.md
 │       │   ├── 6-api-implementation-plan.md
 │       │   ├── 7-extraction-management.md
+│       │   ├── 2026-06-23-pending-features-completion/
+│       │   ├── 2026-06-23-pending-features-completion-rework-1/
+│       │   ├── category-counts-labels.md
+│       │   ├── detail-screens-navigation.md
+│       │   ├── installation-improvement.md
+│       │   ├── logbook-screen.md
+│       │   ├── operation-indexing-progress.md
+│       │   ├── owned-ships-screen.md
 │       │   └── README.md
+│       ├── Plans/
+│       │   └── 2026-06-24-stations-view/   (active plan)
 │       └── ProjectManifest/
 │           ├── README.md
 │           ├── tech-stack.md
@@ -34,12 +44,6 @@
 ├── LICENSE
 ├── package-lock.json
 ├── package.json
-├── plans/
-│   ├── api-migration-logbook.md
-│   ├── detail-screens-navigation.md
-│   ├── installation-improvement.md
-│   ├── logbook-screen.md
-│   └── owned-ships-screen.md
 ├── public/
 │   ├── tauri.svg
 │   └── vite.svg
@@ -57,6 +61,7 @@
 │   │   ├── DataPagination.tsx
 │   │   ├── DataTable.tsx
 │   │   ├── ErrorBanner.tsx
+│   │   ├── LogbookView.test.tsx
 │   │   ├── LogbookView.tsx
 │   │   ├── LogViewer.tsx
 │   │   ├── OwnedShipsView.tsx
@@ -65,6 +70,7 @@
 │   │   ├── SettingsView.tsx
 │   │   ├── SetupWizard.tsx
 │   │   ├── ShipLossesView.tsx
+│   │   ├── StationsView.tsx
 │   │   ├── ThemeToggle.tsx
 │   │   ├── ToolView.tsx
 │   │   └── WindowControls.tsx
@@ -78,6 +84,8 @@
 │   │   ├── ThemeContext.tsx
 │   │   └── ValidationContext.tsx
 │   ├── hooks/
+│   │   ├── useDebounce.test.ts
+│   │   ├── useDebounce.ts
 │   │   ├── useSaveData.ts
 │   │   ├── useQueryProgress.ts
 │   │   └── useTheme.ts
